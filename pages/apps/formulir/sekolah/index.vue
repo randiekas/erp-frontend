@@ -4,6 +4,9 @@
             title="Sekolah"
             subtitle="Pilih sekolah yang ingin anda masuki"
             color="text--black"/>
+        <Dialog
+            :isFetching="isFetching"
+            :dialog="dialog"/>
         <v-alert
             border="left"
             close-text="Close Alert"
@@ -16,7 +19,7 @@
                 v-for="(item, i) in items">
                 <v-list-item
                 :key="`list-${i}`"
-                    v-on:click="handleSubmit"
+                    v-on:click="handleKonfirmasi"
                     color="primary"
                     >
                     <v-list-item-icon>
@@ -46,9 +49,9 @@
                 </v-card-title>
 
                 <v-card-text>
-                    <v-container>
-                        <p>Apakah anda yakin ingin mengirim berkas pendaftaran ke sekolah ini ?</p>
-                    </v-container>
+                    
+                    <p>Apakah anda yakin ingin mengirim berkas pendaftaran ke sekolah ini ?</p>
+                    
                 </v-card-text>
                 
                 <v-card-actions>
@@ -62,8 +65,7 @@
                 <v-btn
                     color="blue darken-1"
                     text
-                    
-                >
+                    v-on:click="handleSubmit">
                     Ya, lanjutkan
                 </v-btn>
                 </v-card-actions>
@@ -76,15 +78,25 @@ export default {
 	layout: 'apps',
 	data: () => ({
 		dialogForm: false,
+        isFetching: false,
+        dialog: {},
 		items: [
+			{ title: 'SDN KEUREA', icon: 'mdi-school'},
 			{ title: 'SD 1 Kujangsari', icon: 'mdi-school'},
 			{ title: 'SMP 1 Kujangsari', icon: 'mdi-school'},
         ],
     }),
 	methods:{
 		handleSubmit:function(){
+            // this.isFetching = true
+            this.dialog = {
+                message: 'Berkas ppdb berhasil dikirimkan ke sekolah, silahkan tunggu hasil pengumuman selanjutnya'
+            }
+            this.dialogForm = false
+		},
+        handleKonfirmasi: function(){
             this.dialogForm = true
-		}
+        }
 	}
 }
 </script>
