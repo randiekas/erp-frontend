@@ -81,9 +81,9 @@ export default {
         isFetching: false,
         dialog: {},
 		items: [
-			{ title: 'SDN KEUREA', icon: 'mdi-school'},
-			{ title: 'SD 1 Kujangsari', icon: 'mdi-school'},
-			{ title: 'SMP 1 Kujangsari', icon: 'mdi-school'},
+			{ title: 'SD NEGRI KEUREA', icon: 'mdi-school'},
+			{ title: 'SD NEGRI 1 Kujangsari', icon: 'mdi-school'},
+			{ title: 'SD NEGRI 2 Kujangsari', icon: 'mdi-school'},
         ],
     }),
 	methods:{

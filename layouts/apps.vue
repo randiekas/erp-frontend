@@ -147,7 +147,7 @@ export default {
 					"ikon": "mdi-school",
 					"nama":"Sekolah",
 					"deskripsi":"Portal Informasi Sekolah yang menerima PPDB (pendaftaran peserta didik baru)",
-					"link":"/apps/akademik/beranda"
+					"link":"/apps/sekolah"
 				},
 			]
 		}
