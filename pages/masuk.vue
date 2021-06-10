@@ -6,7 +6,8 @@
 				<h2 class="mb-3 mt-3">Mohon tunggu . . .</h2>				
 			</div>
 			<p class="mt-2">
-				Solusi monitoring belajar online yang manfaat nya dapat gunakan oleh : <b>Sekolah, Guru, Siswa dan orang tua</b>.
+				SOLUSI ERP UNTUK SEKOLAH
+				<!-- Solusi monitoring belajar online yang manfaat nya dapat gunakan oleh : <b>Sekolah, Guru, Siswa dan orang tua</b>. -->
 			</p>
 		</div>
 		<hr/>
