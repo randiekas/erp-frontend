@@ -49,6 +49,7 @@ export default {
 		'@nuxt/content',
 		'@nuxtjs/auth-next',
 		'@nuxtjs/moment',
+		['@nuxtjs/google-adsense', {id: 'ca-pub-1873701421681101'}]
 	],
 	auth: {
 		// Options
