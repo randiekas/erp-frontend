@@ -30,10 +30,48 @@
 <script>
 export default {
 	layout:'apps',
+	async asyncData({ $auth}) {
+		const tipe			= $auth.$storage.getUniversal("loginType")
+		return {
+			tipe
+		}
+	},
 	data: () => ({
-		tipe: 'calon',
 		apps:{
 			'admin': [
+				{
+					"ikon": "mdi-account-supervisor-circle",
+					"nama":"PPDB",
+					"deskripsi":"Sistem Pengelolaan Penerimaan Peserta Didik Baru",
+					"link":"/apps/ppdb/beranda"
+				},
+				{
+					"ikon": "mdi-school",
+					"nama":"Akademik",
+					"deskripsi":"Sistem Pengelolaan Data Akademik Terpadu",
+					"link":"/apps/akademik/beranda"
+				},
+				{
+					"ikon": "mdi-cash-multiple",
+					"nama":"Keuangan",
+					"deskripsi":"Sistem Pengelolaan Data Keuangan Terpadu",
+					"link":"/apps/keuangan/beranda"
+				},
+				{
+					"ikon": "mdi-family-tree",
+					"nama":"Kepegawaian",
+					"deskripsi":"Sistem Pengelolaan Data Kepegawaian Terpadu",
+					"link":"/apps/kepegawaian/beranda"
+				},
+				{
+					"ikon": "mdi-animation-play",
+					"nama":"LMS",
+					"deskripsi":"Learning Mangement System untuk Sekolah, Kurikulum, Ortu dan Siswa",
+					"link":"lms",
+					"link":"/apps/lms/beranda"
+				},
+			],
+			'sekolah': [
 				{
 					"ikon": "mdi-account-supervisor-circle",
 					"nama":"PPDB",

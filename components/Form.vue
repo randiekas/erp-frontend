@@ -56,14 +56,35 @@
                 :value="item.value"
                 :hint="item.info?item.info[0]:''"
                 v-model="model[item.value]"/>
-            
-            <!-- jika tipenya text -->
-            <v-file-input
+                
+            <!-- jika tipenya file -->
+            <ButtonGDrive 
                 v-else-if="item.type==='file'"
+                :index="index"
+                :label="item.text"
+                :hint="item.info?item.info[0]:''"
+                :onUploaded="(file)=>{model[item.value]=file}"
+                v-model="model[item.value]"/>
+                <!-- <v-file-input
                 accept="image/pdf"
                 :label="item.text"
                 :hint="item.info?item.info[0]:''"
-                v-model="model[item.value]"/>
+                v-model="model[item.value]"/> -->
+            
+            <v-text-field
+                v-else-if="item.type==='openfile'"
+                :label="item.text"
+                :hint="item.info?item.info[0]:''"
+                v-model="model[item.value]">
+                <v-btn
+                    small
+                    slot="prepend"
+                    :href="model[item.value]"
+                    target="_blank">
+                    <v-icon left dark>mdi-launch</v-icon>
+                    Lihat File
+                </v-btn>
+            </v-text-field>
             
             <!-- jika tipenya text -->
             <v-text-field

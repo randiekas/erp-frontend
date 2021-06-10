@@ -56,7 +56,7 @@ export default {
 			{ title: 'Informasi Wali (Ayah)', icon: 'mdi-account-supervisor', to:"/apps/formulir/tambah/waliayah" },
 			{ title: 'Informasi Wali (Ibu)', icon: 'mdi-account-supervisor', to:"/apps/formulir/tambah/waliibu" },
 			{ title: 'Informasi Wali', icon: 'mdi-account-supervisor', to:"/apps/formulir/tambah/wali" },
-			// { title: 'Berkas', icon: 'mdi-certificate', to:"/apps/formulir/tambah/berkas" },
+			{ title: 'Berkas', icon: 'mdi-certificate', to:"/apps/formulir/tambah/berkas" },
         ],
     }),
 	methods:{

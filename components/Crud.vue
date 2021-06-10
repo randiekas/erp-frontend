@@ -15,9 +15,8 @@
         <!-- untuk table -->
 		<v-data-table
 			dense
-			v-model="dipilih"
 			:headers="crud.headers"
-			:items="crud.data||data"
+			:items="data"
 			item-key="name"
 			show-select
 			class="elevation-1"
@@ -26,7 +25,7 @@
 				<v-switch v-model="item.status" readonly class="mt-0" style="height:-webkit-fill-available"/>
 			</template>
 			<template v-slot:[`item.aksi`]="{item}">
-				<v-btn small icon v-on:click="handleOpenFormEdit">
+				<v-btn small icon v-on:click="handleOpenFormEdit(item)">
 					<v-icon small>
 						mdi-pencil
 					</v-icon>
@@ -51,31 +50,11 @@
 
                 <v-card-text>
                     <v-container>
-                        <v-form ref="form">
-                            <div 
-                                v-for="(item, index) in crud.headers.filter((item)=>item.form!=false)"
-                                :key="index">
-                                <!-- jika tipenya switct -->
-                                <v-switch 
-                                    v-if="item.type==='switch'"
-                                    :label="item.text"
-                                    v-model="item.status" 
-                                    class="mt-0" />
-                                <!-- jika tipenya number -->
-                                <v-text-field
-                                    v-else-if="item.type==='number'"
-                                    type="number"
-                                    :label="item.text"
-                                    :messages="item.info"
-                                    placeholder="tes"/>
-                                <!-- jika tipenya text -->
-                                <v-text-field
-                                    v-else
-                                    :label="item.text"
-                                    :messages="item.info"
-                                    placeholder="tes"/>
-                            </div>
-                        </v-form>
+                        <Form
+                            :fields="crud.headers"
+                            :model="model"
+                            :isFetching="isFetching"
+                            :dialog="dialog"/>
                     </v-container>
                 </v-card-text>
                 
@@ -90,8 +69,7 @@
                 <v-btn
                     color="blue darken-1"
                     text
-                    
-                >
+                    v-on:click="handleSimpan">
                     Simpan
                 </v-btn>
                 </v-card-actions>
@@ -118,28 +96,76 @@
 export default {
     props: ["crud"],
 	data: () => ({
+        isFetching: false,
+        dialog: {},
+        model: {},
+        isFetching:false,
 		dipilih: [],
 		dialogForm: false,
 		dialogDelete: false,
 		dialogTitle: '',
-		data: [],
+        data: [],
     }),
+    mounted(){ 
+        this.handleUpdateData()
+    },
 	methods:{
-		handleKonfirmasiHapus(){
+		handleKonfirmasiHapus(item){
 			// console.log(this)
+            this.model        = Object.assign({}, item)
 			this.dialogDelete	= true
 		},
 		handleHapus(){
+            this.isFetching     = true
+            this.$api.$get(`${this.crud.apiHapus}/${this.model.id}`).then((resp)=>{
+                this.isFetching     = false
+                this.dialog     = {
+                    message: resp.message,
+                    status: resp.status
+                }
+                if(resp.status){
+                    this.dialogDelete	= false
+                    this.handleUpdateData()
+                    // this.$nuxt.refresh()
+				}
+                
+            })
+            
 			this.dialogDelete	= false
 		},
         handleOpenFormTambah(){
             this.dialogTitle    = "Tambah"
             this.dialogForm     = true
         },
-        handleOpenFormEdit(){
+        handleOpenFormEdit(item){
             this.dialogTitle    = "Edit"
             this.dialogForm     = true
-        }
+            this.model          = Object.assign({}, item)
+        },
+        handleUpdateData: async function (){
+            let data = (await this.$api.$get(this.crud.apiData)).data
+            this.data   = data
+        },
+        handleSimpan: function(){
+			this.isFetching = true
+            let payload     = {}
+            this.crud.headers.filter((item)=>item.form!=false).map((item)=>{
+                payload[item.value] = this.model[item.value]!=undefined?this.model[item.value]:''
+            })
+            const api = this.model.id?`${this.crud.apiUbah}/${this.model.id}`:this.crud.apiTambah
+			this.$api.$post(api, payload).then(async (resp)=>{
+                this.isFetching = false
+                this.dialog     = {
+                    message: resp.message,
+                    status: resp.status
+                }
+				if(resp.status){
+                    this.dialogForm     = false
+                    this.handleUpdateData()
+                    // this.$nuxt.refresh()
+				}
+			})
+		}
 	}
 }
 </script>

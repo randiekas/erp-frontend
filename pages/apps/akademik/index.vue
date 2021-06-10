@@ -4,7 +4,7 @@
 <script>
 export default {
 	async asyncData({ $axios, $auth, redirect }) {
-		redirect('/apps/ppdb/beranda')
+		redirect('/apps/akademik/beranda')
 		return {
 			
 		}

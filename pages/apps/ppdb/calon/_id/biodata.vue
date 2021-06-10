@@ -1,42 +1,21 @@
 <template>
 	<div>
-        <Head
-            title="Biodata"
-            subtitle="Isi Semua Data Pribadi Kamu"
-            color="text--black"/>
+		<p class="subtitle-2">DATA Pribadi Calon Siswa Baru :</p>
         <Form
             :fields="fields"
-            :model="model"
-            :isFetching="isFetching"
-            :dialog="dialog"/>
-        <div class="text-right">
-            <v-btn 
-                v-on:click="handleSimpan"
-                type="submit"
-                color="primary">
-                Simpan
-            </v-btn>
-        </div>
+            :model="model"/>
 	</div>
 </template>
 <script>
 export default {
-    layout: 'apps',
-    async asyncData({ $api }) {
-		let model = (await $api.$get(`/api/v1/ppdb/biodata/detil/0`)).data
+    async asyncData({ params, $api}){
+		let id_akun	    = params.id
+        let model		= (await $api.$get(`/api/v1/ppdb/biodata/detil/${id_akun}`)).data
 		return {
-			model: model || {
-                kode_pos: 0,
-                anak_ke: 0,
-                jumlah_saudara: 0,
-                jarak_ke_sekolah: 0,
-                tanggal_lahir: "2021-01-01",
-            }
-		}
+            model
+        }
 	},
 	data: () => ({
-        isFetching: false,
-        dialog: {},
 		fields:[
             {
                 text: 'NO NIK',
@@ -194,26 +173,15 @@ export default {
                 info: ['Contoh : 0821XXXXXXX'],
             }, 
         ]
-		
     }),
 	methods:{
-		handleSimpan(){
-            this.isFetching = true
-            let payload     = {}
-            this.fields.map((item)=>{
-                payload[item.value] = this.model[item.value]!=undefined?this.model[item.value]:''
-            })
-			this.$api.$post(`/api/v1/ppdb/biodata/simpan`, payload).then(async (resp)=>{
-                this.isFetching = false
-                this.dialog     = {
-                    message: resp.message,
-                    status: resp.status
-                }
-				if(resp.status){
-                    // this.$nuxt.refresh()
-				}
-			})
+		handleKonfirmasiHapus(){
+			// console.log(this)
+			this.dialogDelete	= true
 		},
+		handleHapus(){
+			this.dialogDelete	= false
+		}
 	}
 }
 </script>

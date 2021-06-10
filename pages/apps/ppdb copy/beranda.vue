@@ -12,22 +12,22 @@
 				sm="12" 
 				md="3"
 				title="Total Pengunjung" 
-				:value="detil.total_pengunjung"/>
+				value="200"/>
 			<CardStats 
 				sm="12" 
 				md="3"
 				title="Total Pendaftar" 
-				:value="detil.total_pendaftar"/>
+				value="200"/>
 			<CardStats 
 				sm="12" 
 				md="3"
 				title="Total Penerimaan" 
-				:value="detil.total_penerimaan"/>
+				value="200"/>
 			<CardStats 
 				sm="12" 
 				md="3"
 				title="Total Diterima" 
-				:value="detil.total_diterima"/>
+				value="200"/>
 		</v-row>
 		<Head 
 			title="Memulai" 
@@ -42,19 +42,13 @@
 </template>
 <script>
 export default {
-	async asyncData({ $api }) {
-		let detil = (await $api.$get(`/api/v1/ppdb/dasbor/data`)).data
-		return {
-			detil
-		}
-	},
 	data: ()=>({
 		instruksiAktif:1,
 		instruksi:[
 			{
-				judul: "Setup Jalur Penerimaan",
-				instruksi: "Membuat Jalur Penerimaan seperti: Jalur Prestasi, Jalur Umum dll",
-				to:"/apps/ppdb/jalur",
+				judul: "Setup Kelompok Penerimaan",
+				instruksi: "Membuat Kelompok Penerimaan seperti: Jalur Prestasi, Jalur Umum dll",
+				to:"/apps/ppdb/kelompok",
 			},
 			{
 				judul: "Formulir Calon Siswa",
@@ -62,15 +56,15 @@ export default {
 				to:"/apps/ppdb/calon",
 			},
 			{
-				judul: "Penerimaan",
+				judul: "Penempatan",
 				instruksi: "Menyeleksi siswa yang diterima",
-				to:"/apps/ppdb/penerimaan",
+				to:"/apps/ppdb/penempatan",
 			},
-			// {
-			// 	judul: "Laporan",
-			// 	instruksi: "Melihat Laporan Detil Penerimaan Peserta didik baru",
-			// 	to:"/apps/ppdb/laporan",
-			// }
+			{
+				judul: "Laporan",
+				instruksi: "Melihat Laporan Detil Penerimaan Peserta didik baru",
+				to:"/apps/ppdb/laporan",
+			}
 		]
 	})
 }

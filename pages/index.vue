@@ -42,11 +42,11 @@ export default {
 	layout:'blank',
 	data: () => ({
 		role: ['admin', 'sekolah', 'guru', 'siswa', 'calon siswa'],
-		roleDipilih: 'siswa',
+		roleDipilih: 'calon',
     }),
 	methods:{
 		handleSubmit:function(){
-			if(this.roleDipilih!="calon"){
+			if(this.roleDipilih!="calon" && this.roleDipilih!="sekolah"){
 				alert("Maaf, hari ini akses tersebut belum tersedia. akan tersedia besok")
 				return false
 			}

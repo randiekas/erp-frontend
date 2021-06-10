@@ -30,7 +30,8 @@ export default {
 			if(resp.status){	
 				$auth.$storage.setUniversal("authToken", resp.data)
 				$auth.$storage.setUniversal("_token.google", token)
-				redirect('/apps/beranda')
+				// redirect('/apps/beranda')
+				window.location.href='/apps/beranda'
 			}else{
 				info	= resp.message
 			}

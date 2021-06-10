@@ -48,6 +48,7 @@ export default {
 		// https://go.nuxtjs.dev/content
 		'@nuxt/content',
 		'@nuxtjs/auth-next',
+		'@nuxtjs/moment',
 	],
 	auth: {
 		// Options

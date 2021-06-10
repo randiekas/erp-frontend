@@ -35,19 +35,19 @@ export default {
             {
                 text: 'Raport Seluruh Semester (dilegalisir)',
                 value: 'raport',
-                // type: 'file',
+                type: 'file',
                 info: ['Gunakan file PDF']
             }, 
             {
                 text: 'Akta Keluarga',
                 value: 'akta',
-                // type: 'file',
+                type: 'file',
                 info: ['Gunakan file PDF']
             }, 
             {
                 text: 'Kartu Keluarga ',
                 value: 'kk',
-                // type: 'file',
+                type: 'file',
                 info: ['Gunakan file PDF']
             }, 
         ]

@@ -19,7 +19,7 @@
                 v-for="(item, i) in items">
                 <v-list-item
                 :key="`list-${i}`"
-                    v-on:click="handleKonfirmasi"
+                    v-on:click="handleKonfirmasi(item)"
                     color="primary"
                     >
                     <v-list-item-icon>
@@ -27,6 +27,7 @@
                     </v-list-item-icon>
                     <v-list-item-content>
                         <v-list-item-title v-text="item.title"></v-list-item-title>
+                        <v-list-item-subtitle v-text="item.subtitle"></v-list-item-subtitle>
                     </v-list-item-content>
                     <v-list-item-action>
                         <v-icon
@@ -45,13 +46,24 @@
             <v-card>
                 <!-- untuk judul dipopup -->
                 <v-card-title>
-                    <span class="headline">Kirim Formulir ?</span>
+                    <span class="headline">Pilih Jalur Pendaftaran</span>
                 </v-card-title>
 
                 <v-card-text>
-                    
-                    <p>Apakah anda yakin ingin mengirim berkas pendaftaran ke sekolah ini ?</p>
-                    
+                    <v-container
+                        class="px-0"
+                        fluid>
+                        <v-radio-group v-model="jalurTerpilih" dense>
+                        <v-radio
+                            off-icon="mdi-checkbox-blank-outline"
+                            on-icon="mdi-checkbox-marked-outline"
+                            v-for="(item, i) in jalur"
+                            :key="i"
+                            :label="item.nama"
+                            :value="item.id"                            
+                        ></v-radio>
+                        </v-radio-group>
+                    </v-container>
                 </v-card-text>
                 
                 <v-card-actions>
@@ -76,26 +88,43 @@
 <script>
 export default {
 	layout: 'apps',
-	data: () => ({
+	data: () => ({        
 		dialogForm: false,
         isFetching: false,
         dialog: {},
 		items: [
-			{ title: 'SD NEGRI KEUREA', icon: 'mdi-school'},
-			{ title: 'SD NEGRI 1 Kujangsari', icon: 'mdi-school'},
-			{ title: 'SD NEGRI 2 Kujangsari', icon: 'mdi-school'},
+			{ id: 1, title: 'SD NEGRI KEUREA', subtitle: 'Jl. Budi Jl. Raya Cilember, Sukaraja, Kec. Cicendo, Kota Bandung, Jawa Barat 40153', icon: 'mdi-school'},
+			{ id: 2, title: 'SD NEGRI 1 Kujangsari', subtitle: 'Jl. Budi Jl. Raya Cilember, Sukaraja, Kec. Cicendo, Kota Bandung, Jawa Barat 40153', icon: 'mdi-school'},
+			{ id: 3, title: 'SD NEGRI 2 Kujangsari', subtitle: 'Jl. Budi Jl. Raya Cilember, Sukaraja, Kec. Cicendo, Kota Bandung, Jawa Barat 40153', icon: 'mdi-school'},
         ],
+        jalur:[],
+        jalurTerpilih: 0,
+        sekolahTerpilih: 0,
     }),
 	methods:{
 		handleSubmit:function(){
             // this.isFetching = true
-            this.dialog = {
-                message: 'Berkas ppdb berhasil dikirimkan ke sekolah, silahkan tunggu hasil pengumuman selanjutnya'
+            const payload   = {
+                id_sekolah: this.sekolahTerpilih.id,
+                id_jalur: this.jalurTerpilih,
             }
-            this.dialogForm = false
+            this.$api.$post(`/api/v1/ppdb/pendaftaran/simpan`, payload).then((resp)=>{
+                this.dialog = {
+                    message: 'Berkas ppdb berhasil dikirimkan ke sekolah, silahkan tunggu hasil pengumuman selanjutnya'
+                }
+                this.dialogForm = false
+                
+            })
+            
 		},
-        handleKonfirmasi: function(){
-            this.dialogForm = true
+        handleKonfirmasi: function(item){
+            this.sekolahTerpilih    = item
+            this.dialogForm         = true
+            this.$api.$get(`/api/v1/ppdb/jalur/sekolah/${item.id}`).then((resp)=>{
+                this.jalur          = resp.data
+                this.jalurTerpilih  = resp.data[0].id
+            })
+            
         }
 	}
 }

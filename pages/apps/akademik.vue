@@ -6,7 +6,8 @@
             mini-variant
             permanent
             expand-on-hover
-            style="height:100vh">
+            
+            style="height:100vh;">
             <v-list
                 dense
                 nav
