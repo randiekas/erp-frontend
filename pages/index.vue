@@ -34,6 +34,21 @@
 			</v-col>
 			</v-row>
 		</v-card>
+		-
+		<ins class="adsbygoogle"
+			style="display:block"
+			data-ad-client="ca-pub-1873701421681101"
+			data-ad-slot="3381959540"
+			data-ad-format="auto"
+			data-full-width-responsive="true"></ins>
+		-
+		<adsbygoogle 
+			class="adsbygoogle"
+			style="display:block"
+			data-ad-client="ca-pub-1873701421681101"
+			data-ad-slot="3381959540"
+			data-ad-format="auto"
+			data-full-width-responsive="true"/>
 	</v-col>
 	</div>
 </template>
