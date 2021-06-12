@@ -26,9 +26,13 @@ export default {
 				to:"/apps/formulir/sekolah",
 			},
 			{
-				judul: "Hasil",
-				instruksi: "Tunggu hasil pengumuman penerimaan siswa baru",
+				judul: "Hasil Seleksi",
+				instruksi: "Tunggu pengumuman hasil seleksi penerimaan siswa baru",
 				to:"/apps/formulir/hasil",
+			},
+			{
+				judul: "Daftar Ulang",
+				instruksi: "Silahkan daftar ulang langsung ke sekolah dengan membawa berkas",
 			},
 		]
     }),

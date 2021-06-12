@@ -44,25 +44,41 @@ export default {
 	data: () => ({
 		menu: [
             {
-                ikon: "mdi-apps-box",
-                nama: "Dashbord",
-                link: "/apps/ppdb/beranda",
-            },
-            {
-                ikon: "mdi-account-group",
-                nama: "Jalur PPDB",
-                link: "/apps/ppdb/jalur",
-            },
-            {
-                ikon: "mdi-account-multiple-plus-outline",
-                nama: "Calon Siswa",
-                link: "/apps/ppdb/calon",
-            },
-            {
-                ikon: "mdi-account-multiple-check-outline",
-                nama: "Penerimaan",
-                link: "/apps/ppdb/penerimaan",
-            },
+					"ikon": "mdi-account-group",
+					"nama":"Kelas",
+					"deskripsi":"Sistem Pengelolaan Kelas",
+					"link":"/apps/akademik/kelas"
+				},
+				{
+					"ikon": "mdi-account-supervisor-circle",
+					"nama":"Siswa",
+					"deskripsi":"Sistem Pengelolaan Siswa",
+					"link":"/apps/akademik/siswa"
+				},
+				{
+					"ikon": "mdi-account-tie",
+					"nama":"Guru",
+					"deskripsi":"Kelola Data Guru",
+					"link":"/apps/akademik/guru"
+				},
+				{
+					"ikon": "mdi-book-open-variant",
+					"nama":"Pembelajaran",
+					"deskripsi":"Kelola Data Pembelajaran",
+					"link":"/apps/akademik/pembelajaran"
+				},
+				{
+					"ikon": "mdi-calendar-clock",
+					"nama":"Jadwal",
+					"deskripsi":"Kelola Data Jadwal",
+					"link":"/apps/akademik/jadwal"
+				},
+				{
+					"ikon": "mdi-chart-box",
+					"nama":"Raport",
+					"deskripsi":"Kelola Data Raport",
+					"link":"/apps/akademik/raport"
+				}
         ],
         
     }),

@@ -61,7 +61,7 @@
 								mdi-information
 							</v-icon>
 						</v-btn>
-						<v-btn small icon v-on:click="handleKonfirmasiHapus(item)">
+						<v-btn small icon v-on:click="handleTambahSiswa(item)">
 							<v-icon small>
 								mdi-account-plus
 							</v-icon>
@@ -74,7 +74,7 @@
 					dense
 					v-model="dipilih"
 					:headers="headersDiterima"
-					:items="data"
+					:items="dataSiswa"
 					item-key="name"
 					class="elevation-1 mt-4"
 					height="65vh">
@@ -85,25 +85,31 @@
 									dense
 									v-model="tahunajaranDipilih"
 									:items="tahunajaran"
-									label="Pilih Tahun Ajaran"/>
+									item-value="value"
+									item-text="label"
+									label="Pilih Tahun Ajaran"
+									v-on:change="handleUpdateDataKelas"/>
 								<v-select
 									dense
 									v-model="tingkatDipilih"
 									:items="tingkat"
-									label="Pilih Tingkat"/>
+									label="Pilih Tingkat"
+									v-on:change="handleUpdateDataKelas"/>
 								<v-select
 									dense
 									v-model="kelasDipilih"
 									:items="kelas"
+									item-value="id"
+									item-text="nama"
 									label="Pilih Kelas"/>
 								<v-btn 
 									small
 									block
-									v-on:click="handleCari">
-									Tampilkan
-									<v-icon small right>
+									v-on:click="handleUpdateDataSiswa">
+									<v-icon small left>
 										mdi-account-search-outline
 									</v-icon>
+									Tampilkan
 								</v-btn>
 							</v-col>
 							<!-- <v-col sm="12" md="12" cols="12" class="align-center justify-center d-flex">
@@ -130,6 +136,55 @@
 			</v-col>
 		</v-row>
 		</div>
+		<!-- dialog -->
+        <v-dialog
+			v-model="isFetching"
+			hide-overlay
+			persistent
+			width="300"
+			>
+			<v-card
+				color="primary"
+				dark
+			>
+				<v-card-text>
+				Menyimpan ...
+				<v-progress-linear
+					indeterminate
+					color="white"
+					class="mb-0"
+				></v-progress-linear>
+				</v-card-text>
+			</v-card>
+		</v-dialog>
+        <v-dialog
+            v-if="dialog"
+			v-model="modal"            
+			width="300">
+			<v-alert
+                v-model="modal"
+                border="top"
+                color="green accent-4"
+                dark
+                dismissible
+                type="success"
+                >
+                {{ dialog.message }}
+            </v-alert>
+		</v-dialog>
+		<!-- untuk popup konfirmasi delete -->
+		<v-dialog v-model="dialogDelete" max-width="500px">
+			<v-card>
+				<v-card-title class="headline">Apakah anda yakin ingin membatalkan penerimaan siswa ini ?</v-card-title>
+				<v-card-actions>
+				<v-spacer></v-spacer>
+				<v-btn color="blue darken-1" text @click="dialogDelete=false">Batal</v-btn>
+				
+				<v-btn color="blue darken-1" text @click="handleHapus">OK</v-btn>
+				<v-spacer></v-spacer>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
 	</div>
 </template>
 <script>
@@ -144,11 +199,17 @@ export default {
 	},
 	mounted: function(){
 		this.handleCari()
+		this.handleUpdateDataKelas()
 	},
 	data: () => ({
 		dipilih: [],
 		dialogDelete: false,
 		data: [],
+		dataSiswa: [],
+		modal:false,
+		dialog:{},
+		siswaDipilih:{},
+		isFetching:false,
 		headers: [
 			{ text: 'NIK', value: 'nik' },
 			{ text: 'Nama', value: 'nama_lengkap' },
@@ -163,27 +224,81 @@ export default {
 		],
 		sekolah: ['SMKN 11 Bandung', 'SMPN 11 Bandung'],
 		proses: ['umum', 'afirmasi', 'beasiswa'],
-		tahunajaran: [2020, 2021],
-		tahunajaranDipilih: 2021,
+		tahunajaran: [
+			{
+				label:'Tahun Ajaran 2021/2022',
+				value:1,
+			},
+		],
+		tahunajaranDipilih: 1,
 		tingkat: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-		tingkatDipilih: 10,
-		kelas: ['10 Multimedia A', '10 Multimedia B'],
-		kelasDipilih: '10 Multimedia A',
+		tingkatDipilih: 6,
+		kelas: [],
+		kelasDipilih: 0,
     }),
 	methods:{
-		handleKonfirmasiHapus(){
+		handleKonfirmasiHapus(item){
 			// console.log(this)
+			this.siswaDipilih	= item
 			this.dialogDelete	= true
 		},
 		handleCari(){
-			this.$api.$get(`/api/v1/ppdb/pendaftaran/data?id_jalur=${this.jalurDipilih}&nama=${this.nama}`).then((resp)=>{
+			this.$api.$get(`/api/v1/ppdb/pendaftaran/data?status=3&id_jalur=${this.jalurDipilih}&nama=${this.nama}`).then((resp)=>{
 				this.data	= resp.data
 			})
 			// console.log(this)
 			// this.dialogDelete	= true
 		},
+		handleUpdateDataKelas: async function (){
+            let data 	= (await this.$api.$get(`/api/v1/akademik/kelas/data?id_tahun_ajaran=${this.tahunajaranDipilih}&tingkat=${this.tingkatDipilih}`)).data
+            this.kelas	= data
+			if(data.length>0){
+				this.kelasDipilih=data[0].id
+			}
+        },
+		handleUpdateDataSiswa: async function (){
+            let data 		= (await this.$api.$get(`/api/v1/akademik/siswa/data?id_kelas=${this.kelasDipilih}`)).data
+            this.dataSiswa	= data
+        },
 		handleHapus(){
 			this.dialogDelete	= false
+			this.isFetching 	= true
+			this.$api.$get(`/api/v1/akademik/siswa/hapus/${this.kelasDipilih}/${this.siswaDipilih.id}`).then(async (resp)=>{
+                this.isFetching = false
+                this.dialog     = {
+                    message: resp.message,
+                    status: resp.status
+                }
+				this.modal		= true
+				if(resp.status){
+					this.handleUpdateDataSiswa()
+                    // this.dialogForm     = false
+                    // this.handleUpdateData()
+                    // this.$nuxt.refresh()
+				}
+			})
+			
+		},
+		handleTambahSiswa: function(item){
+			this.isFetching 	= true
+			const payload		= {
+				id_kelas:this.kelasDipilih,
+				id_akun:item.id_akun,
+			}
+			this.$api.$post('/api/v1/akademik/siswa/buat', payload).then(async (resp)=>{
+                this.isFetching = false
+                this.dialog     = {
+                    message: resp.message,
+                    status: resp.status
+                }
+				this.modal		= true
+				if(resp.status){
+					this.handleUpdateDataSiswa()
+                    // this.dialogForm     = false
+                    // this.handleUpdateData()
+                    // this.$nuxt.refresh()
+				}
+			})
 		}
 	}
 }

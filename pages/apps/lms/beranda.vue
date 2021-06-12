@@ -5,14 +5,12 @@
 			subtitle="Learning Mangement System untuk Sekolah, Kurikulum, Ortu dan Siswa"
 			color="text--black"/>
 		<v-alert
-		v-model="alert"
-		border="left"
-		close-text="Close Alert"
-		color="deep-purple accent-4"
-		dark
-		dismissible
-		>
-		Fitur ini belum tersedia
+			border="left"
+			close-text="Close Alert"
+			color="deep-purple accent-4"
+			dark
+			dismissible>
+				Fitur ini belum tersedia
 		</v-alert>
 	</div>
 </template>

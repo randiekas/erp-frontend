@@ -135,6 +135,7 @@ export default {
 		},
         handleOpenFormTambah(){
             this.dialogTitle    = "Tambah"
+            this.model			= {}
             this.dialogForm     = true
         },
         handleOpenFormEdit(item){

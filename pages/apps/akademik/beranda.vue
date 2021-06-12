@@ -70,34 +70,40 @@ export default {
 		instruksiAktif:1,
 		menu: [
 				{
-					"ikon": "mdi-account-supervisor-circle",
+					"ikon": "mdi-account-group",
 					"nama":"Kelas",
 					"deskripsi":"Sistem Pengelolaan Kelas",
 					"link":"/apps/akademik/kelas"
 				},
 				{
 					"ikon": "mdi-account-supervisor-circle",
+					"nama":"Siswa",
+					"deskripsi":"Sistem Pengelolaan Siswa",
+					"link":"/apps/akademik/siswa"
+				},
+				{
+					"ikon": "mdi-account-tie",
 					"nama":"Guru",
 					"deskripsi":"Kelola Data Guru",
-					"link":"/apps/akademik/kelas"
+					"link":"/apps/akademik/guru"
 				},
 				{
-					"ikon": "mdi-account-supervisor-circle",
+					"ikon": "mdi-book-open-variant",
 					"nama":"Pembelajaran",
 					"deskripsi":"Kelola Data Pembelajaran",
-					"link":"/apps/akademik/kelas"
+					"link":"/apps/akademik/pembelajaran"
 				},
 				{
-					"ikon": "mdi-account-supervisor-circle",
+					"ikon": "mdi-calendar-clock",
 					"nama":"Jadwal",
 					"deskripsi":"Kelola Data Jadwal",
-					"link":"/apps/akademik/kelas"
+					"link":"/apps/akademik/jadwal"
 				},
 				{
-					"ikon": "mdi-account-supervisor-circle",
+					"ikon": "mdi-chart-box",
 					"nama":"Raport",
 					"deskripsi":"Kelola Data Raport",
-					"link":"/apps/akademik/kelas"
+					"link":"/apps/akademik/raport"
 				}
 				
 		],

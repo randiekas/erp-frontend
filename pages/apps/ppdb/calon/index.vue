@@ -2,7 +2,7 @@
 	<div>
 		<Head 
 			title="Calon" 
-			subtitle="Kelola data pendaftaran / calon siswa"
+			subtitle="Seleksi calon siswa / peserta didik baru"
 			color="text--black"/>
 		<v-data-table
 			dense
@@ -20,9 +20,19 @@
 							:items="jalur"
 							label="Pilih Jalur"
 							item-value="id"
-							item-text="nama"/>
+							item-text="nama"
+							v-on:change="handleCari"/>
 					</v-col>
-					<v-col sm="12" md="6" cols="12">
+					<v-col sm="12" md="3" cols="12">
+						<v-select
+							v-model="statusDipilih"
+							:items="status"
+							label="Pilih Status"
+							item-value="id"
+							item-text="nama"
+							v-on:change="handleCari"/>
+					</v-col>
+					<v-col sm="12" md="3" cols="12">
 						<v-text-field
 							v-model="nama"
 							label="Nama"
@@ -39,9 +49,6 @@
 						</v-btn>
 					</v-col>
 				</v-row>
-			</template>
-			<template v-slot:[`item.status`]="{item}">
-				<v-switch v-model="item.status" readonly class="mt-0" style="height:-webkit-fill-available"/>
 			</template>
 			<template v-slot:[`item.dibuat`]="{item}">
 				{{$moment(item.dibuat).format('DD MMM, HH:mm:ss')}}
@@ -84,13 +91,33 @@ export default {
 		return {
 			nama:'',
 			jalurDipilih:jalur[0].id,
-			jalur
+			jalur,
+			status: [
+				{
+					id: 0,
+					nama: "Belum Diperiksa",
+				},
+				{
+					id: 1,
+					nama: "Diterima",
+				},
+				{
+					id: 2,
+					nama: "Ditolak",
+				},
+				{
+					id: 3,
+					nama: "Daftar ulang",
+				}
+			],
+			statusDipilih: 0,
 		}
 	},
 	mounted: function(){
 		this.handleCari()
 	},
 	data: () => ({
+		
 		dipilih: [],
 		dialogDelete: false,
 		data: [],
@@ -111,7 +138,7 @@ export default {
 			this.dialogDelete	= true
 		},
 		handleCari(){
-			this.$api.$get(`/api/v1/ppdb/pendaftaran/data?id_jalur=${this.jalurDipilih}&nama=${this.nama}`).then((resp)=>{
+			this.$api.$get(`/api/v1/ppdb/pendaftaran/data?id_jalur=${this.jalurDipilih}&nama=${this.nama}&status=${this.statusDipilih}`).then((resp)=>{
 				this.data	= resp.data
 			})
 			// console.log(this)

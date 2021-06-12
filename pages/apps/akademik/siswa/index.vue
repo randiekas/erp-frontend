@@ -15,17 +15,24 @@
 					<v-select
 						dense
 						v-model="tahunajaranDipilih"
-						:items="crud.headers[0].options"
+						:items="tahunajaran"
 						label="Pilih Tahun Ajaran"
 						item-value="value"
-						item-text="label"/>
+						item-text="label"
+						v-on:change="handleUpdateDataKelas"/>
 					<v-select
 						dense
 						v-model="tingkatDipilih"
-						:items="crud.headers[1].options"
+						:items="tingkat"
 						label="Pilih Tingkat"
-						item-value="value"
-						item-text="label"/>
+						v-on:change="handleUpdateDataKelas"/>
+					<v-select
+						dense
+						v-model="kelasDipilih"
+						:items="kelas"
+						item-value="id"
+						item-text="nama"
+						label="Pilih Kelas"/>
 					<v-btn 
 						small
 						block
@@ -34,14 +41,6 @@
 							mdi-account-search-outline
 						</v-icon>
 						Tampilkan
-					</v-btn>
-					<v-btn 
-						class="mt-4"
-						small
-						block
-						v-on:click="handleOpenFormTambah">
-						<v-icon left>mdi-plus-circle</v-icon>
-						Tambah
 					</v-btn>
 				</v-col>
 				
@@ -61,11 +60,11 @@
 						<v-switch v-model="item.status" readonly class="mt-0" style="height:-webkit-fill-available"/>
 					</template>
 					<template v-slot:[`item.aksi`]="{item}">
-						<v-btn small icon v-on:click="handleOpenFormEdit(item)">
+						<!-- <v-btn small icon v-on:click="handleOpenFormEdit(item)">
 							<v-icon small>
 								mdi-pencil
 							</v-icon>
-						</v-btn>
+						</v-btn> -->
 						<v-btn small icon v-on:click="handleKonfirmasiHapus(item)">
 							<v-icon small>
 								mdi-delete
@@ -76,45 +75,6 @@
 			</v-col>
 		</v-row>
 		<!-- untuk table -->
-		<!-- untuk popup form dan edit -->
-        <v-dialog
-            v-model="dialogForm"
-            max-width="500px"
-        >
-            <v-card>
-                <!-- untuk judul dipopup -->
-                <v-card-title>
-                    <span class="headline">{{ dialogTitle }}</span>
-                </v-card-title>
-
-                <v-card-text>
-                    <v-container>
-                        <Form
-                            :fields="crud.headers"
-                            :model="model"
-                            :isFetching="isFetching"
-                            :dialog="dialog"/>
-                    </v-container>
-                </v-card-text>
-                
-                <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                    color="blue darken-1"
-                    text
-                    v-on:click="dialogForm=false">
-                    Batal
-                </v-btn>
-                <v-btn
-                    color="blue darken-1"
-                    text
-                    v-on:click="handleSimpan">
-                    Simpan
-                </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
-
         <!-- untuk popup konfirmasi delete -->
 		<v-dialog v-model="dialogDelete" max-width="500px">
 			<v-card>
@@ -144,50 +104,45 @@ export default {
 		dialogDelete: false,
 		dialogTitle: '',
 		data:[],
+		tahunajaran: [
+			{
+				label:'Tahun Ajaran 2021/2022',
+				value:1,
+			},
+		],
 		tahunajaranDipilih:1,
+
+		tingkat: [1,2,3,4,5,6,7,8,9,10,11,12], 
 		tingkatDipilih:6,
+
+		kelas: [],
+		kelasDipilih: 0,
+
 		crud:{
-			title: "Kelas",
-			subtitle: "Kelola data kelas",
-			apiData: '/api/v1/akademik/kelas/data',
-			apiTambah: '/api/v1/akademik/kelas/buat',
-			apiUbah: '/api/v1/akademik/kelas/update',
-			apiHapus: '/api/v1/akademik/kelas/hapus',
+			title: "Siswa",
+			subtitle: "Kelola data siswa",
+			apiData: '/api/v1/akademik/siswa/data',
+			apiHapus: '/api/v1/akademik/siswa/hapus',
 			headers: [
 				{
-					text: 'Tahun Ajaran',
-					value: 'id_tahun_ajaran',
-					type:'select',
-					options: [
-						{
-							label:'Tahun Ajaran 2021/2022',
-							value:1,
-						},
-					],
-					table: false,
-				}, 
-				{
-					text: 'Tingkat',
-					value: 'tingkat',
-					type: 'select',
-					options: [1,2,3,4,5,6,7,8,9,10,11,12].map((item)=>{
-						return {
-							label: item,
-							value: item,
-						}
-					}),
-					table: false,
-				}, 
-				{
-					text: 'Nama Kelas',
-					value: 'nama',
-					info: ['format : [tingkat, nama kelas, rombel], Contoh: 10 Multimedia 1']
+					text: 'NIK',
+					value: 'nik',
 				},
 				{
-					text: 'Total Siswa',
-					value: 'total_siswa',
-					type: 'number',
-					info: ['Jumlah siswa yang ada di kelas ini, Contoh: 35']
+					text: 'NISN',
+					value: 'nisn',	
+				},
+				{
+					text: 'NISN',
+					value: 'nisn',
+				},
+				{
+					text: 'Nama Lengkap',
+					value: 'nama_lengkap',
+				},
+				{
+					text: 'Telepon',
+					value: 'telepon',
 				},
 				{
 					text: 'Aksi',
@@ -198,7 +153,7 @@ export default {
 		}
     }),
 	mounted: function(){
-		this.handleUpdateData()
+		this.handleUpdateDataKelas()
 	},
 	methods:{
 		handleKonfirmasiHapus(item){
@@ -208,7 +163,7 @@ export default {
 		},
 		handleHapus(){
             this.isFetching     = true
-            this.$api.$get(`${this.crud.apiHapus}/${this.model.id}`).then((resp)=>{
+            this.$api.$get(`${this.crud.apiHapus}/${this.kelasDipilih}/${this.model.id}`).then((resp)=>{
                 this.isFetching     = false
                 this.dialog     = {
                     message: resp.message,
@@ -237,8 +192,8 @@ export default {
             this.model          = Object.assign({}, item)
         },
         handleUpdateData: async function (){
-            let data = (await this.$api.$get(`${this.crud.apiData}?id_tahun_ajaran=${this.tahunajaranDipilih}&tingkat=${this.tingkatDipilih}`)).data
-            this.data   = data
+            let data 		= (await this.$api.$get(`${this.crud.apiData}?id_kelas=${this.kelasDipilih}`)).data
+            this.data		= data
         },
         handleSimpan: function(){
 			this.isFetching = true
@@ -259,7 +214,14 @@ export default {
                     // this.$nuxt.refresh()
 				}
 			})
-		}
+		},
+		handleUpdateDataKelas: async function (){
+            let data 	= (await this.$api.$get(`/api/v1/akademik/kelas/data?id_tahun_ajaran=${this.tahunajaranDipilih}&tingkat=${this.tingkatDipilih}`)).data
+            this.kelas	= data
+			if(data.length>0){
+				this.kelasDipilih=data[0].id
+			}
+        },
 	}
 }
 </script>

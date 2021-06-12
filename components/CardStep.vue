@@ -9,6 +9,7 @@
                     <small>{{ item.instruksi }}</small>
                 </p>
                 <v-btn 
+                    v-if="item.to!=undefined"
                     :to="item.to"
                     color="primary">
                     Buka

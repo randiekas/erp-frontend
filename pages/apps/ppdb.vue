@@ -54,12 +54,12 @@ export default {
             },
             {
                 ikon: "mdi-account-multiple-plus-outline",
-                nama: "Calon Siswa",
+                nama: "Seleksi Calon Siswa",
                 link: "/apps/ppdb/calon",
             },
             {
                 ikon: "mdi-account-multiple-check-outline",
-                nama: "Penerimaan",
+                nama: "Penempatan",
                 link: "/apps/ppdb/penerimaan",
             },
         ],
