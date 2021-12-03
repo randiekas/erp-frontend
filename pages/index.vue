@@ -1,56 +1,116 @@
 <template>
-	<div class="d-flex" style="height:100vh;">
-	<v-col class="mx-auto my-auto" xs="12" md="8" style="justify-content:center">
-		<v-card elevation="4">
-			<v-row no-gutters>
-			<v-col xs="12" md="5" class="primary d-flex py-4" cols="12">
-				<div class="mx-auto my-auto text-center">
-					<v-icon color="white" size="64">mdi-school</v-icon>
-					<p class="display-1 white--text">IDISI</p>
-					<p class="subtitle-2 white--text">Sistem Informasi Sekolah</p>
-				</div>
-			</v-col>
-			<v-col xs="12" md="7">
-				<v-card-title>Masuk</v-card-title>
-				<v-card-subtitle class="pb-0">Gunakan akun email untuk melanjutkan</v-card-subtitle>
-				<v-card-text>
-					<v-radio-group v-model="roleDipilih">
-						<v-radio
-							v-for="(item, index) in role"
-							:key="index"
-							:label="item"
-							:value="item.replace('calon siswa', 'calon')"
-						></v-radio>
-					</v-radio-group>
-					<div class="text-right">
-							<v-btn 
-								v-on:click="handleSubmit"
-								color="primary">
-								<v-icon left>mdi-google</v-icon>
-								Masuk
-							</v-btn>
-						</div>
-				</v-card-text>
-			</v-col>
+<div>
+	<v-container class="my-16 py-16">
+        <v-row justify="center" align="center">
+            <v-col md="6">
+				<p class="text-overline secondary--text">Welcome to IDISI</p>
+                <h1 class="text-h1">Aplikasi<br/><span class="primary--text">Ujian</span> #1 </h1>
+                <p class="mt-4 text-overline" style="font-size:11pt!important">Sudah digunakan oleh 100 sekolah serta lebih dari 20 ribu siswa</p>
+				<v-btn to="/apps/siswa" rounded block class="primary">Mulai sekarang</v-btn>
+            </v-col>
+            <v-col md="6">
+                <v-img
+                    src="https://prod-notion-assets.s3-us-west-2.amazonaws.com/front/product/hero.png"/>
+            </v-col>
+        </v-row>
+    </v-container>
+	<div class="grey lighten-4">
+		<v-container class="py-16">
+			<h2 class="text-h3">Keunggulan IDISI</h2>
+			<p class="mt-4">IDISI memiliki fitur-fitur lengkap yang diperlukan untuk ujian online</p>
+			<v-row class="mt-4">
+				<v-col md="3">
+					<v-card outlined rounded="lg">
+						<v-card-text class="pb-0">
+							<v-icon size="64">mdi-account-sync-outline</v-icon>
+						</v-card-text>
+						<v-card-title>Status Online</v-card-title>
+						<v-card-text>
+							Di dashboard guru ada online offline peserta ujian
+						</v-card-text>
+					</v-card>
+				</v-col>
+				<v-col md="3">
+					<v-card outlined rounded="lg">
+						<v-card-text class="pb-0">
+							<v-icon size="64">mdi-file-word-box</v-icon>
+						</v-card-text>
+						<v-card-title>Import Soal</v-card-title>
+						<v-card-text>
+							Soal dapat di import dari microsoft word
+						</v-card-text>
+					</v-card>
+				</v-col>
+				<v-col md="3">
+					<v-card outlined rounded="lg">
+						<v-card-text class="pb-0">
+							<v-icon size="64">mdi-account-sync-outline</v-icon>
+						</v-card-text>
+						<v-card-title>Analisis Soal</v-card-title>
+						<v-card-text>
+							Tersedia laporan analisis butir soal, dan tingkat kesulitan soal
+						</v-card-text>
+					</v-card>
+				</v-col>
+				<v-col md="3">
+					<v-card outlined rounded="lg">
+						<v-card-text class="pb-0">
+							<v-icon size="64">mdi-content-save-check-outline</v-icon>
+						</v-card-text>
+						<v-card-title>Autosave</v-card-title>
+						<v-card-text>
+							Soal otomatis tersimpan setelah siswa menjawab soal
+						</v-card-text>
+					</v-card>
+				</v-col>
+				<v-col md="3">
+					<v-card outlined rounded="lg">
+						<v-card-text class="pb-0">
+							<v-icon size="64">mdi-domino-mask</v-icon>
+						</v-card-text>
+						<v-card-title>Analisis kecurangan</v-card-title>
+						<v-card-text>
+							Tersedia laporan indikasi kecurangan saat ujian
+						</v-card-text>
+					</v-card>
+				</v-col>
+				<v-col md="3">
+					<v-card outlined rounded="lg">
+						<v-card-text class="pb-0">
+							<v-icon size="64">mdi-account-group-outline</v-icon>
+						</v-card-text>
+						<v-card-title>Batch</v-card-title>
+						<v-card-text>
+							Ujian dapat dibagi menjadi beberapa batch
+						</v-card-text>
+					</v-card>
+				</v-col>
+				<v-col md="3">
+					<v-card outlined rounded="lg">
+						<v-card-text class="pb-0">
+							<v-icon size="64">mdi-microsoft-excel</v-icon>
+						</v-card-text>
+						<v-card-title>Export Hasil</v-card-title>
+						<v-card-text>
+							Hasil ujian dapat di export ke format excel
+						</v-card-text>
+					</v-card>
+				</v-col>
+				<v-col md="3">
+					<v-card outlined rounded="lg">
+						<v-card-text class="pb-0">
+							<v-icon size="64">mdi-chart-bar-stacked</v-icon>
+						</v-card-text>
+						<v-card-title>Analisis Jawaban</v-card-title>
+						<v-card-text>
+							Tersedia laporan berapa lama rata-rata siswa menjawab soal
+						</v-card-text>
+					</v-card>
+				</v-col>
 			</v-row>
-		</v-card>
-		<!-- -
-		<ins class="adsbygoogle"
-			style="display:block"
-			data-ad-client="ca-pub-1873701421681101"
-			data-ad-slot="3381959540"
-			data-ad-format="auto"
-			data-full-width-responsive="true"></ins>
-		-
-		<adsbygoogle 
-			class="adsbygoogle"
-			style="display:block"
-			data-ad-client="ca-pub-1873701421681101"
-			data-ad-slot="3381959540"
-			data-ad-format="auto"
-			data-full-width-responsive="true"/> -->
-	</v-col>
+		</v-container>
 	</div>
+</div>
 </template>
 <script>
 export default {

@@ -6,7 +6,6 @@
 			permanent
 			expand-on-hover
 			app>
-
 			<v-list>
 				<v-list-item class="px-2">
 					<v-list-item-avatar>
@@ -28,17 +27,7 @@
 
 			<v-list>
 				<v-list-item
-					color="primary"
-					to="/apps/beranda">
-					<v-list-item-action>
-						<v-icon>mdi-apps</v-icon>
-					</v-list-item-action>
-					<v-list-item-content>
-						<v-list-item-title v-text="'Beranda'" />
-					</v-list-item-content>
-				</v-list-item>
-				<v-list-item
-					v-for="(item, i) in apps[tipe]"
+					v-for="(item, i) in apps"
 					:key="i"
 					:to="item.link"
 					color="primary">
@@ -63,9 +52,7 @@
 		</v-navigation-drawer>
 
 		<v-main>
-			<v-container>
-				<nuxt-child/>
-			</v-container>
+			<nuxt-child/>
 		</v-main>
 
 	</v-app>
@@ -75,7 +62,7 @@
 export default {
 	data () {
 		let user = this.$auth.user
-		let tipe = this.$auth.$storage.getUniversal("loginType")
+		let tipe = "admin"
 		if(!user){
 			this.$router.push(`/`) 
 		}
@@ -89,88 +76,20 @@ export default {
 			rightDrawer: false,
 			title: 'IDISI',
 			tipe,
-			apps:{
-			'admin': [
+			apps: [
 				{
 					"ikon": "mdi-account-supervisor-circle",
 					"nama":"PPDB",
-					"deskripsi":"Sistem Pengelolaan Penerimaan Peserta Didik Baru",
-					"link":"/apps/ppdb"
+					"deskripsi":"Siswa",
+					"link":"/apps/siswa"
 				},
 				{
 					"ikon": "mdi-school",
-					"nama":"Akademik",
+					"nama":"Guru",
 					"deskripsi":"Sistem Pengelolaan Data Akademik Terpadu",
-					"link":"/apps/akademik/beranda"
-				},
-				{
-					"ikon": "mdi-cash-multiple",
-					"nama":"Keuangan",
-					"deskripsi":"Sistem Pengelolaan Data Keuangan Terpadu",
-					"link":"/apps/keuangan/beranda"
-				},
-				{
-					"ikon": "mdi-family-tree",
-					"nama":"Kepegawaian",
-					"deskripsi":"Sistem Pengelolaan Data Kepegawaian Terpadu",
-					"link":"/apps/kepegawaian/beranda"
-				},
-				{
-					"ikon": "mdi-animation-play",
-					"nama":"LMS",
-					"deskripsi":"Learning Mangement System untuk Sekolah, Kurikulum, Ortu dan Siswa",
-					"link":"lms",
-					"link":"/apps/lms/beranda"
-				},
-			],
-			'sekolah': [
-				{
-					"ikon": "mdi-account-supervisor-circle",
-					"nama":"PPDB",
-					"deskripsi":"Sistem Pengelolaan Penerimaan Peserta Didik Baru",
-					"link":"/apps/ppdb"
-				},
-				{
-					"ikon": "mdi-school",
-					"nama":"Akademik",
-					"deskripsi":"Sistem Pengelolaan Data Akademik Terpadu",
-					"link":"/apps/akademik"
-				},
-				{
-					"ikon": "mdi-cash-multiple",
-					"nama":"Keuangan",
-					"deskripsi":"Sistem Pengelolaan Data Keuangan Terpadu",
-					"link":"/apps/keuangan/beranda"
-				},
-				{
-					"ikon": "mdi-family-tree",
-					"nama":"Kepegawaian",
-					"deskripsi":"Sistem Pengelolaan Data Kepegawaian Terpadu",
-					"link":"/apps/kepegawaian/beranda"
-				},
-				{
-					"ikon": "mdi-animation-play",
-					"nama":"LMS",
-					"deskripsi":"Learning Mangement System untuk Sekolah, Kurikulum, Ortu dan Siswa",
-					"link":"lms",
-					"link":"/apps/lms/beranda"
-				},
-			],
-			'calon': [
-				{
-					"ikon": "mdi-account-supervisor-circle",
-					"nama":"PPDB",
-					"deskripsi":"Pendaftaran Peserta Didik Baru (Siswa Baru)",
-					"link":"/apps/formulir"
-				},
-				{
-					"ikon": "mdi-school",
-					"nama":"Sekolah",
-					"deskripsi":"Portal Informasi Sekolah yang menerima PPDB (pendaftaran peserta didik baru)",
-					"link":"/apps/sekolah"
+					"link":"/apps/siswa/ujian"
 				},
 			]
-		}
 		}
 	}
 }
