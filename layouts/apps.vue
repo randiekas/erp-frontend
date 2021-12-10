@@ -18,7 +18,7 @@
 					<v-list-item-title class="title">
 						{{ user.name }}
 					</v-list-item-title>
-					<v-list-item-subtitle>{{ tipe }}</v-list-item-subtitle>
+					<v-list-item-subtitle>{{ user.email }}</v-list-item-subtitle>
 					</v-list-item-content>
 				</v-list-item>
 			</v-list>
@@ -61,7 +61,12 @@
 <script>
 export default {
 	data () {
-		let user = this.$auth.user
+		// let user = this.$auth.user
+		let user	= {
+			name: 'randi eka setiawan',
+			email: 'randiekas@gmail.com',
+			picture: 'https://lh3.googleusercontent.com/a-/AOh14Gi4xaqxMKNwVPnZoD16EBOJZXF-6VMZSUn3PF8FNg=s96-c'
+		}
 		let tipe = "admin"
 		if(!user){
 			this.$router.push(`/`) 
@@ -79,7 +84,7 @@ export default {
 			apps: [
 				{
 					"ikon": "mdi-account-supervisor-circle",
-					"nama":"PPDB",
+					"nama":"Siswa",
 					"deskripsi":"Siswa",
 					"link":"/apps/siswa"
 				},
@@ -87,7 +92,7 @@ export default {
 					"ikon": "mdi-school",
 					"nama":"Guru",
 					"deskripsi":"Sistem Pengelolaan Data Akademik Terpadu",
-					"link":"/apps/siswa/ujian"
+					"link":"/apps/guru"
 				},
 			]
 		}

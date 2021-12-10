@@ -19,7 +19,7 @@
 		</div>
 		<v-container class="mt-n16">
 			<v-card class="mb-4">
-				<v-card-title>Gabung ujian</v-card-title>
+				<v-card-title>Kelola Ujian</v-card-title>
 				<v-card-subtitle>Masukkan kode ujian untuk masuk kedalam ujian</v-card-subtitle>
 				<v-card-text class="d-flex justify-center">
 					<div class="flex-grow-1 mr-4">
