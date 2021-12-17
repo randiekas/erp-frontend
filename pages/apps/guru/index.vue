@@ -20,16 +20,41 @@
 		<v-container class="mt-n16">
 			<v-card class="mb-4">
 				<v-card-title>Kelola Ujian</v-card-title>
-				<v-card-subtitle>Masukkan kode ujian untuk masuk kedalam ujian</v-card-subtitle>
-				<v-card-text class="d-flex justify-center">
-					<div class="flex-grow-1 mr-4">
-						<v-text-field
-							dense
-							outlined
-							label="Kode Ujian"
-							hide-details=""/>
-					</div>
-					<v-btn rounded class="primary">Gabung</v-btn>
+				<v-card-text>
+					<v-row>
+						<v-col md="3">
+							<v-card outlined hover>
+								<v-card-text class="text-center">
+									<v-icon class="black--text" size="42">mdi-folder-text-outline</v-icon>
+									<p class="text-overline  mb-0">Koleksi Soal</p>
+								</v-card-text>
+							</v-card>
+						</v-col>
+						<v-col md="3">
+							<v-card outlined hover>
+								<v-card-text class="text-center">
+									<v-icon class="black--text" size="42">mdi-account-multiple-check</v-icon>
+									<p class="text-overline  mb-0">Kelola Ujian</p>
+								</v-card-text>
+							</v-card>
+						</v-col>
+						<v-col md="3">
+							<v-card outlined hover>
+								<v-card-text class="text-center">
+									<v-icon class="black--text" size="42">mdi-note-plus-outline</v-icon>
+									<p class="text-overline  mb-0">Tambah Koleksi Soal</p>
+								</v-card-text>
+							</v-card>
+						</v-col>
+						<v-col md="3">
+							<v-card outlined hover>
+								<v-card-text class="text-center">
+									<v-icon class="black--text" size="42">mdi-alarm-plus</v-icon>
+									<p class="text-overline  mb-0">Tambah Ujian</p>
+								</v-card-text>
+							</v-card>
+						</v-col>
+					</v-row>
 				</v-card-text>
 			</v-card>
 			<p class="text-overline">Daftar ujian kamu</p>
