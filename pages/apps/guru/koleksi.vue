@@ -3,16 +3,16 @@
 		<div class="primary pb-16">
 			<v-container>
 				<Head
-					title="Hello"
-					subtitle="Selamat datang kembali di IDISI">
+					title="Koleksi"
+					subtitle="Kelola Koleksi Soal">
 					<v-btn
 						small
 						class="white"
-                        @click="handelKeluar">
+                        to="/apps/guru">
 						<v-icon left>
-							mdi-logout
+							mdi-chevron-left
 						</v-icon>
-						Logout
+						Kembali
 					</v-btn>
 				</Head>
 			</v-container>
