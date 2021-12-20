@@ -13,7 +13,7 @@
                     <v-card-text>
                         <v-btn
                             small
-                            :to="`/apps/siswa/ujian/${item.id}`"
+                            :to="`/apps/guru/ujian/${item.id}`"
                             class="primary"
                             rounded="lg">
                             Detail Ujian
@@ -24,8 +24,7 @@
             <v-divider class="m-0 p-0"/>
             <v-row class="mt-0">
                 <v-col class="text-center px-4">
-                    <span v-if="item.status" class="black--text text-h4">{{ item.nilai }}</span>
-                    <v-btn v-else outlined>Belum Mengerjakan</v-btn>
+                    <v-btn outlined>Aktif</v-btn>
                 </v-col>
                 <v-col class="text-center">
                     <my-text

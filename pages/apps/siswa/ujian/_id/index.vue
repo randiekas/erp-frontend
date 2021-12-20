@@ -23,11 +23,6 @@
 				class="mb-2">
 
 				<v-card-text class="d-flex">
-					<div class="flex-grow-0">
-						<v-card class="primary">
-							<v-img :src="ujian.lokasi" width="260"/>
-						</v-card>
-					</div>
 					<div class="flex-grow-1 fill-width">
 						<div class="d-flex justify-space-between align-center">
 							<div>
@@ -50,7 +45,7 @@
 						<v-row class="mt-0">
 							<v-col class="text-center px-4">
 								<span v-if="ujian.status" class="black--text text-h4">{{ ujian.nilai }}</span>
-								<v-btn v-else small outlined>Belum Mengerjakan</v-btn>
+								<v-btn v-else outlined>Belum Mengerjakan</v-btn>
 							</v-col>
 							<v-col class="text-center">
 								<my-text

@@ -34,7 +34,10 @@
 							</v-card>
 						</v-col>
 						<v-col md="3">
-							<v-card outlined hover>
+							<v-card 
+								to="/apps/guru/ujian"
+								outlined 
+								hover>
 								<v-card-text class="text-center">
 									<v-icon class="black--text" size="42">mdi-account-multiple-check</v-icon>
 									<p class="text-overline  mb-0">Kelola Ujian</p>
@@ -64,7 +67,7 @@
 			<div
 				v-for="(item, index) in ujian"
 				:key="index">
-				<my-list-ujian
+				<my-list-ujian-guru
 					:item="item"/>
 			</div>
 		</v-container>
