@@ -6,7 +6,7 @@
 				<p class="text-overline secondary--text">Welcome to IDISI</p>
                 <h1 class="text-h1">Aplikasi<br/><span class="primary--text">Ujian</span> #1 </h1>
                 <p class="mt-4 text-overline" style="font-size:11pt!important">Sudah digunakan oleh 100 sekolah serta lebih dari 20 ribu siswa</p>
-				<v-btn to="/apps/siswa" rounded block class="primary">Mulai sekarang</v-btn>
+				<v-btn @click="handelMasuk" rounded block class="primary">Mulai sekarang</v-btn>
             </v-col>
             <v-col md="6">
                 <v-img
@@ -120,13 +120,13 @@ export default {
 		roleDipilih: 'calon',
     }),
 	methods:{
-		handleSubmit:function(){
-			if(this.roleDipilih!="calon" && this.roleDipilih!="sekolah"){
-				alert("Maaf, hari ini akses tersebut belum tersedia. akan tersedia besok")
-				return false
-			}
-			this.error = null
-			this.$auth.$storage.setUniversal("loginType", this.roleDipilih)
+		handelMasuk:function(){
+			// if(this.roleDipilih!="calon" && this.roleDipilih!="sekolah"){
+			// 	alert("Maaf, hari ini akses tersebut belum tersedia. akan tersedia besok")
+			// 	return false
+			// }
+			// this.error = null
+			// this.$auth.$storage.setUniversal("loginType", this.roleDipilih)
 			return this.$auth
 				.loginWith('google')
 				.catch((err) => {

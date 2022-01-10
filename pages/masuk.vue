@@ -3,7 +3,7 @@
 		<div style="margin-top: 16px">
 			<div class="align-center" style="margin-top:7rem;">
 				<img src="https://prod-notion-assets.s3-us-west-2.amazonaws.com/front/product/hero.png" style="max-width:500px" class="w-100"/>
-				<h2 class="mb-3 mt-3">Mohon tunggu . . .</h2>				
+				<h2 class="mb-3 mt-3">Mohon tunggu . . .</h2>
 			</div>
 			<p class="mt-2">
 				SOLUSI ERP UNTUK SEKOLAH
@@ -21,18 +21,18 @@ export default {
 		const queryString 	= window.location.href;
 		const urlParams 	= new URLSearchParams(queryString)
 		const token 		= `Bearer ${urlParams.get('access_token')}`
-		const tipe			= $auth.$storage.getUniversal("loginType")
-		await $axios.$post(`api/v1/akun/masuk_google`,{
+		const tipe			= 'umum'
+		await $axios.$post(`akun/masuk`,{
 			token:token,
 			tipe:tipe,
 			device:2,
 			token_device:'',
 		}).then((resp)=>{
-			if(resp.status){	
+			if(resp.status){
 				$auth.$storage.setUniversal("authToken", resp.data)
 				$auth.$storage.setUniversal("_token.google", token)
 				// redirect('/apps/beranda')
-				window.location.href='/apps/beranda'
+				window.location.href='/apps/siswa'
 			}else{
 				info	= resp.message
 			}
@@ -41,7 +41,7 @@ export default {
 			info
 		}
 	}
-	
+
 }
 </script>
 <style>

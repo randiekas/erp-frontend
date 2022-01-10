@@ -90,15 +90,15 @@
 <script>
 export default {
 	data () {
-		// let user = this.$auth.user
-		let user	= {
-			name: 'randi eka setiawan',
-			email: 'randiekas@gmail.com',
-			picture: 'https://lh3.googleusercontent.com/a-/AOh14Gi4xaqxMKNwVPnZoD16EBOJZXF-6VMZSUn3PF8FNg=s96-c'
-		}
+		let user = this.$auth.user
+		// let user	= {
+		// 	name: 'randi eka setiawan',
+		// 	email: 'randiekas@gmail.com',
+		// 	picture: 'https://lh3.googleusercontent.com/a-/AOh14Gi4xaqxMKNwVPnZoD16EBOJZXF-6VMZSUn3PF8FNg=s96-c'
+		// }
 		let tipe = "admin"
 		if(!user){
-			this.$router.push(`/`) 
+			this.$router.push(`/`)
 		}
 		return {
 			user,
@@ -137,7 +137,7 @@ export default {
 		handelKeluar: async function(){
 			await localStorage.removeItem('tipe')
 			await localStorage.removeItem("auth.authToken")
-			await this.$auth.logout()	
+			await this.$auth.logout()
 		},
 		setFetching: function(status){
             this.isFetching = status
