@@ -29,7 +29,7 @@ export default {
 			token_device:'',
 		}).then((resp)=>{
 			if(resp.status){
-				$auth.$storage.setUniversal("authToken", resp.data)
+				$auth.$storage.setUniversal("authToken", `Bearer ${resp.data.token}`)
 				$auth.$storage.setUniversal("_token.google", token)
 				// redirect('/apps/beranda')
 				window.location.href='/apps/siswa'

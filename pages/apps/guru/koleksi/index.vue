@@ -32,31 +32,47 @@
 		<v-container class="mt-n16">
 			<v-card>
 				<v-simple-table dense>
-					<template 
+					<template
 						v-slot:default>
 						<thead>
 							<tr>
 								<th width="20">#</th>
 								<th>Nama Koleksi</th>
-								<th width="100">Total Soal</th>
+								<th width="100">Jumlah Soal</th>
+								<th width="100">Visibilitas</th>
 								<th width="130">Dibuat</th>
 								<th width="130"></th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>1</td>
-								<td>Ujian Semester 2021</td>
-								<td>30</td>
-								<td>20 juni 2021</td>
+							<tr
+                                v-for="(item, index) in data"
+                                :key="index">
+								<td align="center">{{ index+1 }}</td>
+								<td>{{ item.nama }}</td>
+								<td align="center">{{ item.jumlah_soal}}</td>
+								<td align="center">
+                                    <v-chip v-if="item.visibilitas==1" class="primary" small>Publik</v-chip>
+                                    <v-chip v-else class="danger" small>Private</v-chip>
+                                </td>
+								<td align="center">{{ $moment(item.dibuat).format('ll') }}</td>
 								<td>
-									<v-btn @click="handelHapusKoleksi" small icon>
+									<v-btn
+                                        @click="handelHapusKoleksi(item.id)"
+                                        small
+                                        icon>
 										<v-icon>mdi-delete</v-icon>
 									</v-btn>
-									<v-btn small icon>
+									<v-btn
+                                        @click="handelEditKoleksi(item)"
+                                        small
+                                        icon>
 										<v-icon>mdi-pencil</v-icon>
 									</v-btn>
-									<v-btn to="/apps/guru/koleksi/1" small icon>
+									<v-btn
+                                        :to="`/apps/guru/koleksi/${item.id}`"
+                                        small
+                                        icon>
 										<v-icon>mdi-eye</v-icon>
 									</v-btn>
 								</td>
@@ -80,6 +96,14 @@
 						label="Nama Koleksi"
 						outlined
 						required/>
+                    <v-radio-group v-model="form.visibilitas" label="Visibilitas">
+                        <v-radio
+                            label="Private"
+                            :value="0"/>
+                        <v-radio
+                            label="Publik"
+                            :value="1"/>
+                    </v-radio-group>
 				</v-card-text>
 				<v-card-actions>
 					<v-spacer></v-spacer>
@@ -96,48 +120,85 @@
 					</v-btn>
 				</v-card-actions>
 			</v-card>
-			</v-dialog>
+		</v-dialog>
+
+
 	</div>
 </template>
 <script>
 export default {
 	layout:'apps',
-	props: ['setConfirmation'],
-	async asyncData({ $auth}) {
-		const tipe			= $auth.$storage.getUniversal("loginType")
-		return {
-			tipe,
-			dialog: false,
-		}
-	},
+	props: [ 'setConfirmation', 'setSnackbar', 'setFetching' ],
 	data: function(){
+
 		return {
-			form :{
-				nama: ''
-			}
+            dialog: false,
+            data: [],
+			form :{}
 		}
 	},
 	mounted: function(){
-        // this.handelLoadData()
-        // this.handelLoadDataPelajaran()
-        // this.handelResetForm()
+
+        this.handelLoadData()
+        this.handelResetForm()
     },
 	methods:{
+
+        handelLoadData: async function(){
+            this.data   = (await this.$api(`/ujian/koleksi`)).data.data
+        },
+
 		handelResetForm: function(){
             this.form   = {
-                nama: ''
+                nama: '',
+                visibilitas: 0
             }
         },
+
 		handelSimpanForm: function(){
 
+            this.setFetching(true)
+
+            if(this.form.id){
+
+                this.$api.$put(`/ujian/koleksi/${this.form.id}`, this.form).then((resp)=>{
+                    this.setSnackbar('Koleksi berhasil disimpan')
+                    this.setFetching(false)
+                    this.handelResetForm()
+                    this.handelLoadData()
+                    this.dialog = false
+                })
+            }else{
+
+                this.$api.$post(`/ujian/koleksi`, this.form).then((resp)=>{
+                    this.setSnackbar('Koleksi berhasil disimpan')
+                    this.setFetching(false)
+                    this.handelResetForm()
+                    this.handelLoadData()
+                    this.dialog = false
+                })
+            }
+
+
 		},
-		handelHapusKoleksi: function(){
+
+		handelEditKoleksi: function(item){
+
+            this.form   = Object.assign({}, item)
+            this.dialog = true
+		},
+
+		handelHapusKoleksi: function(id){
 			this.setConfirmation({
 				status: true,
 				title: 'Hapus ?',
 				message: "Apakah anda yakin ingin menghapus koleksi ini ?",
 				handelOk: ()=>{
-					// this.setConfirmation({ status: false })
+					this.$api.$delete(`/ujian/koleksi/${id}`).then((resp)=>{
+                        this.setSnackbar('Koleksi berhasil dihapus')
+                        this.setFetching(false)
+                        this.handelLoadData()
+                    })
 				}
 			})
 		}

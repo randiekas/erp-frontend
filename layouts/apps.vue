@@ -1,5 +1,40 @@
 <template>
 	<v-app>
+        <v-snackbar
+            top
+            right
+            v-model="snackbar.status">
+            {{ snackbar.message }}
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                color="red"
+                text
+                v-bind="attrs"
+                @click="snackbar = false">
+                Close
+                </v-btn>
+            </template>
+
+        </v-snackbar>
+
+        <v-dialog
+			v-model="isFetching"
+			hide-overlay
+			persistent
+			width="300">
+			<v-card
+				color="primary"
+				dark>
+				<v-card-text>
+				Memproses ...
+				<v-progress-linear
+					indeterminate
+					color="white"
+					class="mb-0"
+				></v-progress-linear>
+				</v-card-text>
+			</v-card>
+		</v-dialog>
 		<v-dialog
 			v-model="confirmation.status"
 			persistent
@@ -80,6 +115,7 @@
 		<v-main>
 			<nuxt-child
 				:setConfirmation="(item)=>confirmation=item"
+				:setSnackbar="(message)=>snackbar={status: true, message}"
 				:setFetching="setFetching"
 				:handelKeluar="handelKeluar"/>
 		</v-main>
@@ -111,6 +147,10 @@ export default {
 			title: 'IDISI',
 			tipe,
 			isFetching: false,
+            snackbar: {
+                status: false,
+                message: ''
+            },
 			apps: [
 				{
 					"ikon": "mdi-account-supervisor-circle",
