@@ -18,7 +18,7 @@
 						<v-btn
 							small
 							class="white"
-							@click="dialog=true">
+							@click="handelResetForm">
 							<v-icon left>
 								mdi-plus
 							</v-icon>
@@ -44,7 +44,7 @@
 			<v-row dense>
 				<v-col md="8">
 					<v-card outlined class="mb-2">
-						<v-card-title v-if="form.id">Soal {{ current+1 }}</v-card-title>
+						<v-card-title v-if="form.id">Soal {{ current }}</v-card-title>
 						<v-card-title v-else>Form Tambah Soal</v-card-title>
 						<v-card-text>
 							<div class="mb-4">
@@ -96,60 +96,43 @@
 							<div class="mb-4">
 								<p class="text-overline mb-0 black--text">Pertanyaan</p>
                                 <my-editor v-model="form.pertanyaan"/>
-                                {{ form.pertanyaan }}
 							</div>
 							<v-divider class="mb-4"/>
 							<div class="mb-4">
 								<p class="text-overline mb-0 black--text">Opsi Jawaban</p>
-								<v-card outlined hover class="mb-2">
-									<v-card-text class="d-flex py-2 align-items-center" style="align-items: center">
-										<v-avatar size="30" class="primary white--text mr-4"><b>A</b></v-avatar>
-										<div class="text-align-center justify-content-center">
-											Setengah bagian
-										</div>
-									</v-card-text>
-								</v-card>
-								<v-card outlined hover class="mb-2">
-									<v-card-text class="d-flex py-2 align-items-center" style="align-items: center">
-										<v-avatar size="30" class="primary white--text mr-4"><b>B</b></v-avatar>
-										<div class="text-align-center justify-content-center">
-											Setengah bagian
-										</div>
-									</v-card-text>
-								</v-card>
-								<v-card outlined hover class="mb-2">
-									<v-card-text class="d-flex py-2 align-items-center" style="align-items: center">
-										<v-avatar size="30" class="primary white--text mr-4"><b>C</b></v-avatar>
-										<div class="text-align-center justify-content-center">
-											Setengah bagian
-										</div>
-									</v-card-text>
-								</v-card>
+								
+								<div 
+									v-for="(item, index) in form.opsi"
+									:key="index"
+									outlined 
+									class="d-flex py-2 align-items-center" 
+									style="align-items: center">
+
+									<v-avatar size="30" class="primary white--text mr-4">
+										<b>{{ indexAlphabet[index] }}</b>
+									</v-avatar>
+									<v-text-field
+										dense
+										v-model="form.opsi[index]"
+										hide-details=""
+										class="w-100"/>
+
+								</div>
 							</div>
 							<v-divider class="mb-4"/>
 							<div class="mb-4">
-								<p class="text-overline mb-0 black--text">Jawaban Benar</p>
+								<p class="text-overline black--text">Jawaban Benar</p>
 								<v-row>
-									<v-col>
-										<v-card outlined hover class="mb-2">
-											<v-card-text class="d-flex py-2 align-items-center" style="align-items: center">
-												<v-avatar size="30" class="primary white--text mr-4"><b>A</b></v-avatar>
-											</v-card-text>
-										</v-card>
-									</v-col>
-									<v-col>
-										<v-card outlined hover class="mb-2">
-											<v-card-text class="d-flex py-2 align-items-center" style="align-items: center">
-												<v-avatar size="30" class="primary white--text mr-4"><b>A</b></v-avatar>
-											</v-card-text>
-										</v-card>
-									</v-col>
-									<v-col>
-										<v-card outlined hover class="mb-2">
-											<v-card-text class="d-flex py-2 align-items-center" style="align-items: center">
-												<v-avatar size="30" class="primary white--text mr-4"><b>C</b></v-avatar>
-											</v-card-text>
-										</v-card>
+									<v-col 
+										v-for="(item, index) in form.opsi.length"
+										:key="index"
+										style="text-align: center">
+										<v-btn 
+											@click="form.jawaban=index"
+											outlined
+											:class="index==form.jawaban?'primary white--text border--primary':''">
+											{{ indexAlphabet[index] }}
+										</v-btn>
 									</v-col>
 								</v-row>
 
@@ -159,8 +142,15 @@
 							<v-spacer></v-spacer>
 							<v-btn
 								text
-								@click="dialog = false">
+								@click="handelResetForm">
 								Reset
+							</v-btn>
+							<v-btn
+								v-if="form.id"
+								outlined
+								text
+								@click="handelHapus">
+								<v-icon icon>mdi-delete</v-icon>
 							</v-btn>
 							<v-btn
 								text
@@ -186,9 +176,11 @@
                             </v-alert>
 							<v-row
                                 v-else
-                                justify="space-between" dense>
+								justify="space-between"
+                                dense>
 								<v-col
 									v-for="item in detail.soal.length"
+									@click="handelPilihSoal(item)"
 									:key="item"
 									class="text-center">
 									<v-btn
@@ -212,6 +204,7 @@
 <script>
 export default {
 	layout:'apps',
+	props: [ 'setConfirmation', 'setSnackbar', 'setFetching' ],
     async asyncData({ params }) {
 
         return {
@@ -219,11 +212,13 @@ export default {
         }
     },
 	data: function(){
+
 		return {
             detail: {
                 soal: [],
             },
-			form :{}
+			form :{},
+			current: 0,
 		}
 	},
 	mounted: function(){
@@ -239,17 +234,55 @@ export default {
             this.detail     = (await this.$api(`/ujian/koleksi/${this.id}`)).data.data
         },
 
+		handelPilihSoal(index){
+
+			let item 		= Object.assign({}, this.detail.soal[index-1])
+			item.opsi		= JSON.parse(item.opsi)
+			this.current	= index
+			this.form		= item
+		},
+
 		handelResetForm: function(){
+
             this.form   = {
                 level: 0,
                 tipe: 0,
-                pertanyaan: "Ibu mempunyai sebuah kue. Kue tersebut dipotong menjadi 4 bagian sama besar. Satu potong diberikan kepada adik. Adik menerima kue sebanyak . . . .",
-                opsi: "string",
-                jawaban: "string"
+                pertanyaan: '',
+                opsi: ['','','','',''],
+                jawaban: 0
             }
         },
+
 		handelSimpanForm: function(){
 
+			this.setFetching(true)
+
+			let payload		= Object.assign({}, this.form)
+			payload.opsi	= JSON.stringify(payload.opsi)
+			this.$api.$post(`/ujian/koleksi/${this.id}/soal`, payload).then((resp)=>{
+				this.setSnackbar('Soal berhasil ditambahkan')
+				this.setFetching(false)
+				this.handelResetForm()
+				this.handelLoadData()
+				this.dialog = false
+			})
+		},
+
+		handelHapus: function(id){
+
+			this.setConfirmation({
+				status: true,
+				title: 'Hapus ?',
+				message: "Apakah anda yakin ingin menghapus soal ini ?",
+				handelOk: ()=>{
+					this.$api.$delete(`/ujian/koleksi/${this.id}/soal/${this.form.id}`).then((resp)=>{
+                        this.setSnackbar('Soal berhasil dihapus')
+                        this.setFetching(false)
+						this.handelResetForm()
+                        this.handelLoadData()
+                    })
+				}
+			})
 		}
 	}
 }

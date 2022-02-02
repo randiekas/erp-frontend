@@ -58,13 +58,13 @@
 								<td align="center">{{ $moment(item.dibuat).format('ll') }}</td>
 								<td>
 									<v-btn
-                                        @click="handelHapusKoleksi(item.id)"
+                                        @click="handelHapus(item.id)"
                                         small
                                         icon>
 										<v-icon>mdi-delete</v-icon>
 									</v-btn>
 									<v-btn
-                                        @click="handelEditKoleksi(item)"
+                                        @click="handelEdit(item)"
                                         small
                                         icon>
 										<v-icon>mdi-pencil</v-icon>
@@ -145,10 +145,12 @@ export default {
 	methods:{
 
         handelLoadData: async function(){
+
             this.data   = (await this.$api(`/ujian/koleksi`)).data.data
         },
 
 		handelResetForm: function(){
+
             this.form   = {
                 nama: '',
                 visibilitas: 0
@@ -162,7 +164,7 @@ export default {
             if(this.form.id){
 
                 this.$api.$put(`/ujian/koleksi/${this.form.id}`, this.form).then((resp)=>{
-                    this.setSnackbar('Koleksi berhasil disimpan')
+                    this.setSnackbar('Koleksi berhasil diubah')
                     this.setFetching(false)
                     this.handelResetForm()
                     this.handelLoadData()
@@ -171,7 +173,7 @@ export default {
             }else{
 
                 this.$api.$post(`/ujian/koleksi`, this.form).then((resp)=>{
-                    this.setSnackbar('Koleksi berhasil disimpan')
+                    this.setSnackbar('Koleksi berhasil ditambahkan')
                     this.setFetching(false)
                     this.handelResetForm()
                     this.handelLoadData()
@@ -182,13 +184,14 @@ export default {
 
 		},
 
-		handelEditKoleksi: function(item){
+		handelEdit: function(item){
 
             this.form   = Object.assign({}, item)
             this.dialog = true
 		},
 
-		handelHapusKoleksi: function(id){
+		handelHapus: function(id){
+
 			this.setConfirmation({
 				status: true,
 				title: 'Hapus ?',

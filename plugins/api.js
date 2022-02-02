@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 export default function ({ $axios }, inject) {
 	// Create a custom axios instance
 	// $auth.$storage.getUniversal("authToken")
@@ -10,3 +12,5 @@ export default function ({ $axios }, inject) {
 	// Inject to context as $api
 	inject('api', api)
 }
+
+Vue.prototype.indexAlphabet = ['A', 'B', 'C', 'D', 'E']
