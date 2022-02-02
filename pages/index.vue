@@ -121,19 +121,18 @@ export default {
     }),
 	methods:{
 		handelMasuk:function(){
-			// if(this.roleDipilih!="calon" && this.roleDipilih!="sekolah"){
-			// 	alert("Maaf, hari ini akses tersebut belum tersedia. akan tersedia besok")
-			// 	return false
-			// }
-			// this.error = null
-			// this.$auth.$storage.setUniversal("loginType", this.roleDipilih)
-			return this.$auth
-				.loginWith('google')
-				.catch((err) => {
-					// eslint-disable-next-line no-console
-					console.error(err)
-					this.error = err.response?.data
-				})
+			if(this.$auth.user){
+				this.$router.push("/apps/siswa")
+			}else{
+				this.$auth
+					.loginWith('google')
+					.catch((err) => {
+						// eslint-disable-next-line no-console
+						console.error(err)
+						this.error = err.response?.data
+					})
+			}
+			
 		}
 	}
 }
