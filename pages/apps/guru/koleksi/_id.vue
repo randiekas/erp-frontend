@@ -6,7 +6,7 @@
 					title="Detil"
 					:subtitle="detail.nama">
 					<div>
-						<v-btn
+						<!-- <v-btn
 							small
 							class="white"
 							@click="dialog=true">
@@ -14,7 +14,7 @@
 								mdi-upload
 							</v-icon>
 							Import Soal
-						</v-btn>
+						</v-btn> -->
 						<v-btn
 							small
 							class="white"
@@ -100,12 +100,12 @@
 							<v-divider class="mb-4"/>
 							<div class="mb-4">
 								<p class="text-overline mb-0 black--text">Opsi Jawaban</p>
-								
-								<div 
+
+								<div
 									v-for="(item, index) in form.opsi"
 									:key="index"
-									outlined 
-									class="d-flex py-2 align-items-center" 
+									outlined
+									class="d-flex py-2 align-items-center"
 									style="align-items: center">
 
 									<v-avatar size="30" class="primary white--text mr-4">
@@ -123,11 +123,11 @@
 							<div class="mb-4">
 								<p class="text-overline black--text">Jawaban Benar</p>
 								<v-row>
-									<v-col 
+									<v-col
 										v-for="(item, index) in form.opsi.length"
 										:key="index"
 										style="text-align: center">
-										<v-btn 
+										<v-btn
 											@click="form.jawaban=index"
 											outlined
 											:class="index==form.jawaban?'primary white--text border--primary':''">
@@ -176,16 +176,17 @@
                             </v-alert>
 							<v-row
                                 v-else
-								justify="space-between"
                                 dense>
 								<v-col
 									v-for="item in detail.soal.length"
-									@click="handelPilihSoal(item)"
 									:key="item"
-									class="text-center">
+									@click="handelPilihSoal(item)"
+                                    style="flex-grow:initial">
 									<v-btn
 										small
-										outlined>{{ item }}</v-btn>
+										outlined
+                                        :class="item==current?'primary white--text border--primary':''"
+                                        >{{ item }}</v-btn>
 								</v-col>
 							</v-row>
 						</v-card-text>
@@ -243,8 +244,8 @@ export default {
 		},
 
 		handelResetForm: function(){
-
-            this.form   = {
+            this.current    = 0
+            this.form       = {
                 level: 0,
                 tipe: 0,
                 pertanyaan: '',
@@ -259,13 +260,27 @@ export default {
 
 			let payload		= Object.assign({}, this.form)
 			payload.opsi	= JSON.stringify(payload.opsi)
-			this.$api.$post(`/ujian/koleksi/${this.id}/soal`, payload).then((resp)=>{
-				this.setSnackbar('Soal berhasil ditambahkan')
-				this.setFetching(false)
-				this.handelResetForm()
-				this.handelLoadData()
-				this.dialog = false
-			})
+
+            if(payload.id){
+
+                this.$api.$put(`/ujian/koleksi/${this.id}/soal/${payload.id}`, payload).then((resp)=>{
+                    this.setSnackbar('Soal berhasil diubah')
+                    this.setFetching(false)
+                    this.handelLoadData()
+                    this.dialog = false
+                })
+            }else{
+
+                this.$api.$post(`/ujian/koleksi/${this.id}/soal`, payload).then((resp)=>{
+                    this.setSnackbar('Soal berhasil ditambahkan')
+                    this.setFetching(false)
+                    this.handelResetForm()
+                    this.handelLoadData()
+                    this.dialog = false
+                })
+            }
+
+
 		},
 
 		handelHapus: function(id){

@@ -1,7 +1,9 @@
 <template>
+    <div>
     <client-only placeholder="loading...">
         <ckeditor-nuxt v-model="contentHolder" :config="editorConfig"  />
     </client-only>
+    </div>
 </template>
 
 <script>
@@ -25,6 +27,9 @@ export default {
         }
     },
     watch: {
+        value(value){
+            this.contentHolder  = value
+        },
         contentHolder(value) {
             // HTML
             // const isSame = CKEDITOR.getHTML() === value

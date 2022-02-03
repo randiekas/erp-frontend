@@ -32,7 +32,7 @@
 		<v-container class="mt-n16">
 			<v-card>
 				<v-simple-table dense>
-					<template 
+					<template
 						v-slot:default>
 						<thead>
 							<tr>
@@ -41,26 +41,44 @@
 								<th width="130">Jumlah Batch</th>
 								<th width="130">Jumlah Soal</th>
 								<th width="130">Durasi Ujian</th>
+								<th width="300">Berbatas waktu</th>
 								<th width="130">Dibuat</th>
 								<th width="130"></th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>1</td>
-								<td>Ujian PAS</td>
-								<td>2</td>
-								<td>20</td>
-								<td>30 Menit</td>
-								<td>20 juni 2021</td>
+							<tr
+                                v-for="(item, index) in data"
+                                :key="index">
+								<td align="center">{{ index+1 }}</td>
+								<td>{{ item.nama }}</td>
+								<td align="center">{{ item.jumlah_kelompok }}</td>
+								<td align="center">{{ item.jumlah_soal }}</td>
+								<td align="center">{{ item.durasi }} Menit</td>
+								<td align="center">
+                                    <div v-if="item.terjadwal">
+                                        {{ $moment(item.dimulai).format('l LT') }} - {{ $moment(item.selesai).format('l LT') }}
+                                    </div>
+                                    <div v-else>-</div>
+                                </td>
+                                <td align="center">{{ $moment(item.dibuat).format('ll') }}</td>
 								<td>
-									<v-btn @click="handelHapusKoleksi" small icon>
+									<v-btn
+                                        @click="handelHapus(item.id)"
+                                        small
+                                        icon>
 										<v-icon>mdi-delete</v-icon>
 									</v-btn>
-									<v-btn small icon>
+									<v-btn
+                                        @click="handelEdit(item)"
+                                        small
+                                        icon>
 										<v-icon>mdi-pencil</v-icon>
 									</v-btn>
-									<v-btn to="/apps/guru/ujian/1" small icon>
+									<v-btn
+                                        :to="`/apps/guru/ujian/${item.id}`"
+                                        small
+                                        icon>
 										<v-icon>mdi-eye</v-icon>
 									</v-btn>
 								</td>
@@ -91,6 +109,32 @@
 						label="Durasi (menit)"
 						outlined
 						required/>
+
+                    <div class="d-flex justify-space-between">
+                        <p>Berbatas Waktu ?</p>
+                        <v-switch
+                            class="mt-0"
+                            dense
+                            v-model="form.terjadwal"/>
+                    </div>
+                    <template v-if="form.terjadwal">
+
+                        <v-text-field
+                            type="datetime-local"
+                            v-model="form.mulai"
+                            dense
+                            label="Mulai dapat diakses pada"
+                            outlined
+                            required/>
+
+                        <v-text-field
+                            type="datetime-local"
+                            v-model="form.berakhir"
+                            dense
+                            label="Selesai dapat diakses pada"
+                            outlined
+                            required/>
+                    </template>
 				</v-card-text>
 				<v-card-actions>
 					<v-spacer></v-spacer>
@@ -113,16 +157,11 @@
 <script>
 export default {
 	layout:'apps',
-	props: ['setConfirmation'],
-	async asyncData({ $auth}) {
-		const tipe			= $auth.$storage.getUniversal("loginType")
-		return {
-			tipe,
-			dialog: false,
-		}
-	},
+	props: [ 'setConfirmation', 'setSnackbar', 'setFetching' ],
 	data: function(){
 		return {
+            dialog: false,
+            data: [],
 			form :{
 				nama: '',
 				durasi: 30
@@ -130,27 +169,69 @@ export default {
 		}
 	},
 	mounted: function(){
-        // this.handelLoadData()
+        this.handelLoadData()
         // this.handelLoadDataPelajaran()
         // this.handelResetForm()
     },
 	methods:{
+
+        handelLoadData: async function(){
+
+            this.data   = (await this.$api(`/ujian`)).data.data
+        },
+
 		handelResetForm: function(){
             this.form   = {
                 nama: '',
-				durasi: 30
+				durasi: 30,
+				terjadwal: 0,
             }
         },
+
 		handelSimpanForm: function(){
 
+            this.setFetching(true)
+
+            this.form.terjadwal = this.form.terjadwal?true:false
+            if(this.form.id){
+
+                this.$api.$put(`/ujian/${this.form.id}`, this.form).then((resp)=>{
+                    this.setSnackbar('Ujian berhasil diubah')
+                    this.setFetching(false)
+                    this.handelResetForm()
+                    this.handelLoadData()
+                    this.dialog = false
+                })
+            }else{
+
+                this.$api.$post(`/ujian`, this.form).then((resp)=>{
+                    this.setSnackbar('Ujian berhasil ditambahkan')
+                    this.setFetching(false)
+                    this.handelResetForm()
+                    this.handelLoadData()
+                    this.dialog = false
+                })
+            }
 		},
-		handelHapusKoleksi: function(){
+
+		handelEdit: function(item){
+
+            this.form   = Object.assign({}, item)
+            this.dialog = true
+		},
+
+		handelHapus: function(id){
+
 			this.setConfirmation({
 				status: true,
 				title: 'Hapus ?',
-				message: "Apakah anda yakin ingin menghapus koleksi ini ?",
+				message: "Apakah anda yakin ingin menghapus ujian ini ?",
 				handelOk: ()=>{
-					// this.setConfirmation({ status: false })
+					this.$api.$delete(`/ujian/${id}`).then((resp)=>{
+                        this.setSnackbar('Ujian berhasil dihapus')
+                        this.setFetching(false)
+                        this.handelLoadData()
+                    })
 				}
 			})
 		}
