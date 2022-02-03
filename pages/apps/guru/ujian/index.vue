@@ -41,7 +41,7 @@
 								<th width="130">Jumlah Batch</th>
 								<th width="130">Jumlah Soal</th>
 								<th width="130">Durasi Ujian</th>
-								<th width="300">Berbatas waktu</th>
+								<th width="250">Berbatas waktu</th>
 								<th width="130">Dibuat</th>
 								<th width="130"></th>
 							</tr>
@@ -57,7 +57,7 @@
 								<td align="center">{{ item.durasi }} Menit</td>
 								<td align="center">
                                     <div v-if="item.terjadwal">
-                                        {{ $moment(item.dimulai).format('l LT') }} - {{ $moment(item.selesai).format('l LT') }}
+                                        {{ $moment(item.dimulai).format('DD MMM (hh:mm)') }} - {{ $moment(item.selesai).format('DD MMM (hh:mm)') }}
                                     </div>
                                     <div v-else>-</div>
                                 </td>
@@ -118,7 +118,7 @@
                             v-model="form.terjadwal"/>
                     </div>
                     <template v-if="form.terjadwal">
-
+						
                         <v-text-field
                             type="datetime-local"
                             v-model="form.mulai"
@@ -151,7 +151,7 @@
 					</v-btn>
 				</v-card-actions>
 			</v-card>
-			</v-dialog>
+		</v-dialog>
 	</div>
 </template>
 <script>

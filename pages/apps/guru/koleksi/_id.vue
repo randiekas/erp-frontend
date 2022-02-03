@@ -3,7 +3,7 @@
 		<div class="primary pb-16">
 			<v-container>
 				<Head
-					title="Detil"
+					title="Detail"
 					:subtitle="detail.nama">
 					<div>
 						<!-- <v-btn

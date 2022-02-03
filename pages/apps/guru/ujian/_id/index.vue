@@ -3,8 +3,8 @@
 		<div class="primary pb-16">
 			<v-container>
 				<Head
-					title="Detil"
-					subtitle="Koleksi soal un 2021">
+					title="Detail"
+					subtitle="Kelola detail ujian">
 					<div>
 						<v-btn
 							small
@@ -20,7 +20,9 @@
 				</Head>
 			</v-container>
 		</div>
-		<v-container class="mt-n16">
+		<v-container 
+			v-if="detail.id"
+			class="mt-n16">
 			<v-row dense>
 				<v-col md="12">
 					<v-card
@@ -30,8 +32,8 @@
 							<div class="flex-grow-1 fill-width">
 								<div class="d-flex justify-space-between align-center">
 									<div>
-										<v-card-title class="black--text text-truncate">{{ ujian.nama }}</v-card-title>
-										<v-card-subtitle>{{ ujian.pelajaran }}</v-card-subtitle>
+										<v-card-title class="black--text text-truncate">{{ detail.nama }}</v-card-title>
+										<v-card-subtitle>Detail Ujian</v-card-subtitle>
 									</div>
 									<v-card outlined rounded="lg">
 										<v-card-text>
@@ -40,7 +42,7 @@
 												:to="`/apps/siswa/ujian/${ujian.id}/mulai`"
 												class="primary"
 												rounded="lg">
-												Mulai Ujian
+												Monitoring Realtime
 											</v-btn>
 										</v-card-text>
 									</v-card>
@@ -305,7 +307,8 @@
 						<div class="text-right mb-4">
 							<v-btn 
 								small
-								class="primary">
+								class="primary"
+								@click="dialog=true">
 								Tambah Kelompok peserta
 							</v-btn>
 						</div>
@@ -318,30 +321,42 @@
 											<th width="20">#</th>
 											<th>Nama Kelompok</th>
 											<th width="130">Kode Ujian</th>
+											<th width="100">Visibilitas</th>
 											<th width="130">Jumlah Peserta</th>
-											<th width="130">Dimulai</th>
-											<th width="130">Selesai</th>
 											<th width="130">Dibuat</th>
 											<th width="130"></th>
 										</tr>
 									</thead>
 									<tbody>
-										<tr>
-											<td>1</td>
-											<td>Kelas Ipa 1</td>
-											<td>Pqzsd30</td>
-											<td>30</td>
-											<td>20 juni 2021</td>
-											<td>20 juni 2021</td>
-											<td>20 juni 2021</td>
+										<tr
+											v-for="(item, index) in detail.kelompok"
+											:key="index">
+											<td align="center">{{ index+1 }}</td>
+											<td>{{ item.nama }}</td>
+											<td>{{ item.uuid }}</td>
+											<td align="center">
+												<v-chip v-if="item.visibilitas==1" class="primary" small>Publik</v-chip>
+												<v-chip v-else class="danger" small>Private</v-chip>
+											</td>
+											<td align="center">{{ item.jumlah_peserta }}</td>
+											<td align="center">{{ $moment(item.dibuat).format('ll') }}</td>
 											<td>
-												<v-btn @click="handelHapusKoleksi" small icon>
+												<v-btn
+													@click="handelHapus(item.id)"
+													small
+													icon>
 													<v-icon>mdi-delete</v-icon>
 												</v-btn>
-												<v-btn small icon>
+												<v-btn
+													@click="handelEdit(item)"
+													small
+													icon>
 													<v-icon>mdi-pencil</v-icon>
 												</v-btn>
-												<v-btn to="/apps/guru/ujian/1/kelompok/1" small icon>
+												<v-btn
+													to="/apps/guru/ujian/1/kelompok/1"
+													small
+													icon>
 													<v-icon>mdi-eye</v-icon>
 												</v-btn>
 											</td>
@@ -359,16 +374,56 @@
 			</v-row>
 		</v-container>
 
+		<!-- form kelompok -->
+		<v-dialog
+			v-model="dialog"
+			persistent
+			max-width="600px">
+			<v-card class="p-2">
+				<v-card-title>Buat Kelompok</v-card-title>
+				<v-card-text>
+					<v-text-field
+						v-model="form.nama"
+						dense
+						label="Nama Kelompok"
+						outlined
+						required/>
+					<v-radio-group v-model="form.visibilitas" label="Visibilitas">
+                        <v-radio
+                            label="Private"
+                            :value="0"/>
+                        <v-radio
+                            label="Publik"
+                            :value="1"/>
+                    </v-radio-group>
+				</v-card-text>
+				<v-card-actions>
+					<v-spacer></v-spacer>
+					<v-btn
+						text
+						@click="dialog = false">
+						Batal
+					</v-btn>
+					<v-btn
+						text
+						@click="handelSimpanForm"
+						outlined>
+						Simpan
+					</v-btn>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
+
 	</div>
 </template>
 <script>
 export default {
 	layout:'apps',
-	async asyncData({ $auth}) {
-		const tipe			= $auth.$storage.getUniversal("loginType")
-		return {
-			tipe,
-			dialog: false,
+	props: [ 'setConfirmation', 'setSnackbar', 'setFetching' ],
+    async asyncData({ params }) {
+
+        return {
+            id: params.id,
 			ujian: {
 				id: 1,
 				lokasi: 'https://olle-tryout-new.sfo2.digitaloceanspaces.com/biibo/file_unggah/Add%20a%20subheading%20%288%29.jpg',
@@ -381,29 +436,88 @@ export default {
 				nilai: 80,
 				status:0
 			},
-		}
-	},
+        }
+    },
 	data: function(){
+
 		return {
+            detail: {
+                soal: [],
+            },
+			form :{},
+			current: 0,
 			tabActive: 0,
-			form :{
-				nama: ''
-			}
+			dialog: false,
 		}
 	},
 	mounted: function(){
-        // this.handelLoadData()
+
+        this.handelLoadData()
+        this.handelResetForm()
         // this.handelLoadDataPelajaran()
-        // this.handelResetForm()
     },
+	
 	methods:{
+		handelLoadData: async function(){
+
+            // this.soal     	= (await this.$api(`/ujian/${this.id}/soal`)).data.data
+            this.detail     = (await this.$api(`/ujian/${this.id}`)).data.data
+        },
 		handelResetForm: function(){
             this.form   = {
-                nama: ''
+                nama: '',
+				visibilitas: 0
             }
         },
 		handelSimpanForm: function(){
 
+			this.setFetching(true)
+
+			let payload		= Object.assign({}, this.form)
+
+            if(payload.id){
+
+                this.$api.$put(`/ujian/${this.id}/kelompok/${payload.id}`, payload).then((resp)=>{
+                    this.setSnackbar('Kelompok berhasil diubah')
+                    this.setFetching(false)
+                    this.handelLoadData()
+                    this.dialog = false
+                })
+            }else{
+
+                this.$api.$post(`/ujian/${this.id}/kelompok`, payload).then((resp)=>{
+                    this.setSnackbar('Kelompok berhasil ditambahkan')
+                    this.setFetching(false)
+                    this.handelResetForm()
+                    this.handelLoadData()
+                    this.dialog = false
+                })
+            }
+
+
+		},
+
+		handelEdit: function(item){
+
+            this.form   = Object.assign({}, item)
+            this.dialog = true
+		},
+
+		handelHapus: function(id){
+
+			this.setConfirmation({
+				status: true,
+				title: 'Hapus ?',
+				message: "Apakah anda yakin ingin menghapus soal ini ?",
+				handelOk: ()=>{
+					this.$api.$delete(`/ujian/koleksi/${this.id}/soal/${this.form.id}`).then((resp)=>{
+                        this.setSnackbar('Soal berhasil dihapus')
+                        this.setFetching(false)
+						this.handelResetForm()
+                        this.handelLoadData()
+                    })
+				}
+			})
 		}
 	}
 }
